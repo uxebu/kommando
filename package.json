@@ -1,0 +1,18 @@
+{
+  "author": "uxebu",
+  "name": "webdrvr",
+  "description": "Webdriver wrapper for various test runners",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "main": "src/index.js",
+  "dependencies": {
+    "selenium-webdriver": "~2.33.0",
+    "saucelabs": "~0.1.0",
+    "jasmine-node": "~1.10.2",
+    "sauce-tunnel": "~1.0.1"
+  },
+  "devDependencies": {}
+}
