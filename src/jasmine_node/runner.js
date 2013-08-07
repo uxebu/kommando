@@ -2,6 +2,13 @@ var jasmine = require('jasmine-node');
 require('./jasminewd.js');
 var webdriver = require('selenium-webdriver');
 
+/*
+- browserName (capabilities)
+- baseUrl
+- imageUrl
+- seleniumAddress
+*/
+
 var run = module.exports = function(config, runnerCallback) {
 
   var onComplete = function(runner, log) {
@@ -18,7 +25,7 @@ var run = module.exports = function(config, runnerCallback) {
     specNameMatcher: 'spec',
     extensions: 'js',
     regExpSpec: /.spec\.(js)$/i,
-    specFolders: ['.'],
+    specFolders: config.specFolders,
     onComplete: onComplete,
     isVerbose: false,
     showColors: true,
