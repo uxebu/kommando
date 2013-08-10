@@ -92,8 +92,7 @@ var runWithSeleniumAddress = function(config, callback) {
 
 var runWithSeleniumServer = function(config, callback) {
   config.seleniumArgs = config.seleniumArgs || [];
-  var server = config.server = new remote.SeleniumServer({
-    jar: webdriverSetup.selenium.path,
+  var server = config.server = new remote.SeleniumServer(webdriverSetup.selenium.path, {
     args: webdriverSetup.args.concat(config.seleniumArgs)
   });
   server.start().then(function(url) {

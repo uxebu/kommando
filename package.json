@@ -9,12 +9,12 @@
   },
   "main": "src/index.js",
   "dependencies": {
-    "selenium-webdriver": "~2.33.0",
+    "selenium-webdriver": "~2.34.0",
     "saucelabs": "~0.1.0",
     "jasmine-node": "~1.10.2",
     "sauce-tunnel": "~1.0.1",
     "phantomjs": "~1.9.1-0",
-	"webdriver-setup": "2.33.0-0"
+    "webdriver-setup": "2.34.0-0"
   },
   "devDependencies": {},
   "engines": {
