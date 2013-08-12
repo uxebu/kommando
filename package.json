@@ -14,7 +14,7 @@
     "jasmine-node": "~1.10.2",
     "sauce-tunnel": "~1.0.1",
     "phantomjs": "~1.9.1-0",
-    "webdriver-setup": "2.34.0-0"
+    "webdriver": "2.34.0-0"
   },
   "devDependencies": {},
   "engines": {
