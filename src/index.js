@@ -7,8 +7,6 @@ var SauceLabs = require('saucelabs');
 var webdriverSetup = require('webdriver');
 var vm = require('vm');
 
-var jasmineNodeRunner = require('./jasmine_node/runner.js');
-
 // Default configuration.
 /*var config = {
   sauceUser: '',
@@ -34,10 +32,10 @@ var executeSpecs = function(error, config) {
     throw error;
   }
 
-  var clientModule = require('./selenium_webdriver.js');
+  var clientModule = require('./client/selenium_webdriver.js');
   clientModule.create(config.seleniumAddress, config.capabilities, function(error, id, client) {
     var code = [
-      'var runner = require(\'./jasmine_node/runner.js\');',
+      'var runner = require(\'./runner/jasmine_node.js\');',
       'runner(runnerConfig, runnerCallback);'
     ].join('\n');
     var cleanup = function(error, passed) {
