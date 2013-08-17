@@ -5,7 +5,6 @@ var webdriver = require('selenium-webdriver');
 var remote = require('selenium-webdriver/remote');
 var SauceLabs = require('saucelabs');
 var webdriverSetup = require('webdriver');
-var vm = require('vm');
 
 // Default configuration.
 /*var config = {
@@ -24,49 +23,61 @@ var vm = require('vm');
   specs: [] // glob
 }*/
 
-var vmCount = 0;
+var runnerCount = 0;
 var seleniumServer;
 
 var executeSpecs = function(error, config) {
   if (error) {
     throw error;
   }
-
-  var clientModule = require('./client/selenium_webdriver.js');
-  clientModule.create(config.seleniumAddress, config.capabilities, function(error, id, client) {
-    var code = [
-      'var runner = require(\'./runner/jasmine_node.js\');',
-      'runner(runnerConfig, runnerCallback);'
-    ].join('\n');
-    var cleanup = function(error, passed) {
-      clientModule.quit(client);
-      vmCount--;
-      cleanupServer(id, error, !!passed);
-    };
+  var runnerArgs = {
+    specFolders: config.specFolders
+  };
+  var server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
   
-    vm.runInNewContext(code, {
-      console: console,
-      require: require,
-      seleniumAddress: config.seleniumAddress,
-      seleniumCapabilities: config.capabilities,
-      runnerCallback: cleanup,
-      runnerConfig: {
-        client: client,
-        args: {
-          specFolders: config.specFolders
-        }
-      }
-    }, 'kommando-runner.vm');
-    vmCount++;
+  _executeSpecsWithCapabilities(server, config.capabilities, runnerArgs);
+};
+
+var _executeSpecsWithCapabilities = function(server, capabilities, runnerArgs) {
+  var capability = capabilities.splice(0, 1)[0];
+  executeSpecsWithCapabilities(server, capability, runnerArgs, function(error, passed) {
+    if (capabilities.length === 0) {
+      cleanupServer(error, passed);
+    } else {
+      _executeSpecsWithCapabilities(server, capabilities, runnerArgs);
+    }
   });
 };
+
+var executeSpecsWithCapabilities = function(server, capabilities, runnerArgs, callback) {
+  server.createClient(capabilities, function(error, id, client) {
+    var cleanup = function(error, passed) {
+      if (error) {
+        callback(error);
+        return;
+      }
+      server.quitClient(client, function() {
+        callback(error, passed);
+      });
+    };
+
+    var runner = require('./runner/jasmine_node.js');
+    runner({
+      client: client,
+      server: server,
+      capabilities: capabilities,
+      runnerCallback: cleanup,
+      runnerArgs: runnerArgs
+    });
+  });
+}
 
 var cleanupServer = function(error, passed) {
   if (sauceAccount) {
     sauceAccount.updateJob(id, {passed: passed}, function() {});
   }
 
-  if (vmCount === 0) {
+  if (runnerCount === 0) {
     if (seleniumServer) {
       console.log('Shutting down selenium standalone server');
       seleniumServer.stop();
@@ -112,7 +123,7 @@ var runWithSeleniumServer = function(config, callback) {
   });
   seleniumServer.start().then(function(url) {
     console.log('Selenium standalone server started at ' + url);
-    config.seleniumAddress = seleniumServer.address();
+    config.seleniumAddress = url;
     callback(null, config);
   });
 };
@@ -136,6 +147,9 @@ module.exports = run;
 });
 */
 run({
-  capabilities: webdriver.Capabilities.phantomjs(),
+  capabilities: [
+    webdriver.Capabilities.phantomjs(),
+    webdriver.Capabilities.chrome()
+  ],
   specFolders: ['./src']
 });

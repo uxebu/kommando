@@ -1,21 +1,28 @@
 var webdriver = require('selenium-webdriver');
 
-module.exports.create = function(seleniumAddress, seleniumCapabilities, callback) {
-  var client = new webdriver.Builder()
-    .usingServer(seleniumAddress)
-    .withCapabilities(seleniumCapabilities)
-    .build();
+module.exports = function(seleniumAddress) {
+  return {
+    createClient: function(capabilities, callback) {
+      var client = new webdriver.Builder()
+        .usingServer(seleniumAddress)
+        .withCapabilities(capabilities)
+        .build();
 
-  client.manage().timeouts().setScriptTimeout(100000);
-  // TODO: handle errors?
-  client.getSession().then(function(session) {
-    callback(null, session.id, client);
-  });
-};
-
-module.exports.quit = function(client, callback) {
-  // TODO: handle errors?
-  client.quit().then(function() {
-    callback();
-  });
-};
+      client.manage().timeouts().setScriptTimeout(100000);
+      // TODO: handle errors?
+      client.getSession().then(function(session) {
+        callback(null, session.getId(), client);
+      });
+    },
+    quitClient: function(client, callback) {
+      // TODO: handle errors?
+      try {
+      client.quit().then(function() {
+        callback();
+      });
+    } catch(e) {
+      callback();
+    }
+    }
+  }
+}
