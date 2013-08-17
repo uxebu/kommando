@@ -1,5 +1,8 @@
 var jasmine = require('jasmine-node');
+require('./jasminewd.js');
+
 var webdriver = require('selenium-webdriver');
+var SandboxedModule = require('sandboxed-module');
 
 /*
 - browserName (capabilities)
@@ -8,14 +11,17 @@ var webdriver = require('selenium-webdriver');
 - seleniumAddress
 */
 
+var initialRun = true;
+var currentConfig;
+
 var run = module.exports = function(config) {
-  require('./jasminewd.js');
+  currentConfig = config;
   var onComplete = function(runner, log) {
     var passed = false;
     if (runner.results().failedCount === 0) {
       passed = true;
     }
-    config.runnerCallback(null, passed, global.client);
+    config.runnerCallback(null, passed, currentConfig.client);
   };
 
   var options = {
@@ -24,7 +30,7 @@ var run = module.exports = function(config) {
     specNameMatcher: 'spec',
     extensions: 'js',
     regExpSpec: /.spec\.(js)$/i,
-    specFolders: config.runnerArgs.specFolders,
+    specFolders: [],
     onComplete: onComplete,
     isVerbose: false,
     showColors: true,
@@ -34,8 +40,19 @@ var run = module.exports = function(config) {
     junitReport: {}
   };
 
-  global.client = config.client;
-  global.webdriver = webdriver;
+  for (var i = 0, l = config.runnerArgs.specs.length; i < l; i++) {
+    SandboxedModule.require(config.runnerArgs.specs[i], {
+      locals: {
+        client: config.client,
+        webdriver: webdriver
+      }
+    });
+  }
 
-  jasmine.executeSpecsInFolder(options);
+  if (initialRun) {
+    jasmine.executeSpecsInFolder(options);
+    initialRun = false;
+  } else {
+    jasmine.getEnv().execute();
+  }
 };

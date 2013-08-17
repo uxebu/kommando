@@ -31,7 +31,7 @@ var executeSpecs = function(error, config) {
     throw error;
   }
   var runnerArgs = {
-    specFolders: config.specFolders
+    specs: config.specs
   };
   var server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
   
@@ -154,5 +154,8 @@ run({
     {browserName: 'firefox'},
     {browserName: 'safari'}
   ],
-  specFolders: ['./src']
+  specs: [
+    '/Users/tobias/projects/pro7/kommando/test/integration/foo-spec.js',
+    '/Users/tobias/projects/pro7/kommando/test/integration/bar-spec.js'
+  ]
 });
