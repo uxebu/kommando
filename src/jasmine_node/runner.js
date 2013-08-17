@@ -10,7 +10,6 @@ var webdriver = require('selenium-webdriver');
 */
 
 var run = module.exports = function(config, runnerCallback) {
-
   var onComplete = function(runner, log) {
     var passed = false;
     if (runner.results().failedCount === 0) {
@@ -25,7 +24,7 @@ var run = module.exports = function(config, runnerCallback) {
     specNameMatcher: 'spec',
     extensions: 'js',
     regExpSpec: /.spec\.(js)$/i,
-    specFolders: config.specFolders,
+    specFolders: config.args.specFolders,
     onComplete: onComplete,
     isVerbose: false,
     showColors: true,

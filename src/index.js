@@ -4,7 +4,8 @@ var fs = require('fs');
 var webdriver = require('selenium-webdriver');
 var remote = require('selenium-webdriver/remote');
 var SauceLabs = require('saucelabs');
-var webdriverSetup = require('webdriver-setup')(process);
+var webdriverSetup = require('webdriver');
+var vm = require('vm');
 
 var jasmineNodeRunner = require('./jasmine_node/runner.js');
 
@@ -25,39 +26,55 @@ var jasmineNodeRunner = require('./jasmine_node/runner.js');
   specs: [] // glob
 }*/
 
-var driver;
+var vmCount = 0;
+var seleniumServer;
 
 var executeSpecs = function(error, config) {
   if (error) {
     throw error;
   }
-  
-  driver = config.client = new webdriver.Builder()
-    .usingServer(config.seleniumAddress)
-    .withCapabilities(config.capabilities)
-    .build();
 
-  driver.manage().timeouts().setScriptTimeout(100000);
-  driver.getSession().then(function(session) {
-    config.id = session.id;
+  var clientModule = require('./selenium_webdriver.js');
+  clientModule.create(config.seleniumAddress, config.capabilities, function(error, id, client) {
+    var code = [
+      'var runner = require(\'./jasmine_node/runner.js\');',
+      'runner(runnerConfig, runnerCallback);'
+    ].join('\n');
+    var cleanup = function(error, passed) {
+      clientModule.quit(client);
+      vmCount--;
+      cleanupServer(id, error, !!passed);
+    };
+  
+    vm.runInNewContext(code, {
+      console: console,
+      require: require,
+      seleniumAddress: config.seleniumAddress,
+      seleniumCapabilities: config.capabilities,
+      runnerCallback: cleanup,
+      runnerConfig: {
+        client: client,
+        args: {
+          specFolders: config.specFolders
+        }
+      }
+    }, 'kommando-runner.vm');
+    vmCount++;
   });
-  jasmineNodeRunner(config, cleanup);
 };
 
-var cleanup = function(error, passed) {
+var cleanupServer = function(error, passed) {
   if (sauceAccount) {
-    sauceAccount.updateJob(id, {'passed': passed}, function() {});
-    process.exit(passed ? 0 : 1);
+    sauceAccount.updateJob(id, {passed: passed}, function() {});
   }
 
-  driver.quit().then(function() {
-    /*if (server) {
-      util.puts('Shutting down selenium standalone server');
-      server.stop();
-    }*/
-  }).then(function() {
+  if (vmCount === 0) {
+    if (seleniumServer) {
+      console.log('Shutting down selenium standalone server');
+      seleniumServer.stop();
+    }
     process.exit(passed ? 0 : 1);
-  });
+  };
 };
 
 var run = function(config) {
@@ -92,12 +109,12 @@ var runWithSeleniumAddress = function(config, callback) {
 
 var runWithSeleniumServer = function(config, callback) {
   config.seleniumArgs = config.seleniumArgs || [];
-  var server = config.server = new remote.SeleniumServer(webdriverSetup.selenium.path, {
+  seleniumServer = new remote.SeleniumServer(webdriverSetup.selenium.path, {
     args: webdriverSetup.args.concat(config.seleniumArgs)
   });
-  server.start().then(function(url) {
+  seleniumServer.start().then(function(url) {
     console.log('Selenium standalone server started at ' + url);
-    config.seleniumAddress = server.address();
+    config.seleniumAddress = seleniumServer.address();
     callback(null, config);
   });
 };
@@ -114,18 +131,13 @@ if (config.sauceUser && config.sauceKey) {
 
 module.exports = run;
 
-
 /*run({
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  capabilities: {
-    'browserName': 'safari'
-  },
+  capabilities: webdriver.Capabilities.phantomjs(),
   specFolders: ['./src']
-});*/
-
+});
+*/
 run({
-  capabilities: {
-    'browserName': 'phantomjs'
-  },
+  capabilities: webdriver.Capabilities.phantomjs(),
   specFolders: ['./src']
 });
