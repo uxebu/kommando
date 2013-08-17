@@ -150,7 +150,9 @@ module.exports = run;
 run({
   capabilities: [
     {browserName: 'phantomjs'},
-    {browserName: 'chrome'}
+    {browserName: 'chrome'},
+    {browserName: 'firefox'},
+    {browserName: 'safari'}
   ],
   specFolders: ['./src']
 });
