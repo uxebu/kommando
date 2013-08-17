@@ -15,7 +15,7 @@ var run = module.exports = function(config) {
     if (runner.results().failedCount === 0) {
       passed = true;
     }
-    config.runnerCallback(null, passed);
+    config.runnerCallback(null, passed, global.client);
   };
 
   var options = {
@@ -34,8 +34,8 @@ var run = module.exports = function(config) {
     junitReport: {}
   };
 
-  jasmine.getEnv().client = config.client;
-  jasmine.getEnv().webdriver = webdriver;
+  global.client = config.client;
+  global.webdriver = webdriver;
 
   jasmine.executeSpecsInFolder(options);
 };

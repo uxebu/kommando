@@ -40,6 +40,7 @@ var executeSpecs = function(error, config) {
 
 var _executeSpecsWithCapabilities = function(server, capabilities, runnerArgs) {
   var capability = capabilities.splice(0, 1)[0];
+  console.log('Execute specs with ' + capability.browserName);
   executeSpecsWithCapabilities(server, capability, runnerArgs, function(error, passed) {
     if (capabilities.length === 0) {
       cleanupServer(error, passed);
@@ -51,7 +52,7 @@ var _executeSpecsWithCapabilities = function(server, capabilities, runnerArgs) {
 
 var executeSpecsWithCapabilities = function(server, capabilities, runnerArgs, callback) {
   server.createClient(capabilities, function(error, id, client) {
-    var cleanup = function(error, passed) {
+    var cleanup = function(error, passed, client) {
       if (error) {
         callback(error);
         return;
@@ -148,8 +149,8 @@ module.exports = run;
 */
 run({
   capabilities: [
-    webdriver.Capabilities.phantomjs(),
-    webdriver.Capabilities.chrome()
+    {browserName: 'phantomjs'},
+    {browserName: 'chrome'}
   ],
   specFolders: ['./src']
 });

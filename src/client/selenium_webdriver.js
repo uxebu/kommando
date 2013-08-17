@@ -16,13 +16,9 @@ module.exports = function(seleniumAddress) {
     },
     quitClient: function(client, callback) {
       // TODO: handle errors?
-      try {
       client.quit().then(function() {
         callback();
       });
-    } catch(e) {
-      callback();
-    }
     }
   }
 }
