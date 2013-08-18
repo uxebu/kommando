@@ -5,6 +5,7 @@ var webdriver = require('selenium-webdriver');
 var remote = require('selenium-webdriver/remote');
 var SauceLabs = require('saucelabs');
 var webdriverSetup = require('webdriver');
+var relay = require('relay');
 
 // Default configuration.
 /*var config = {
@@ -30,48 +31,57 @@ var executeSpecs = function(error, config) {
   if (error) {
     throw error;
   }
-  var runnerArgs = {
-    specs: config.specs
-  };
-  var server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
+  var server = config.server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
+  var runner = require('./runner/jasmine_node.js');
   
-  _executeSpecsWithCapabilities(server, config.capabilities, runnerArgs);
+  relay.parallel
+
+  var capabilities = config.capabilities;
+  var runnerSetupFunctions = [];
+  var runnerSetupArgs = [];
+  for (var i = 0, l = capabilities.length; i < l; i++) {
+    runnerSetupFunctions.push(setupRunner);
+    runnerSetupArgs.push([
+      config,
+      capabilities[i],
+      runner
+    ]);
+  }
+  runnerSetupArgs.push(function(error) {
+    runner.run(function(error, passed) {
+      var clients = server.getClients();
+      var clientQuitFunctions = [];
+      var clientQuitArgs = [];
+      for (var key in clients) {
+        clientQuitFunctions.push(server.quitClient);
+        clientQuitArgs.push([clients[key]]);
+      }
+      clientQuitArgs.push(cleanupServer);
+      var quitClients = relay.parallel.apply(server, clientQuitFunctions);
+      quitClients.apply(null, clientQuitArgs);
+    });
+  });
+  var runnerSetup = relay.parallel.apply(null, runnerSetupFunctions);
+  runnerSetup.apply(null, runnerSetupArgs);
 };
 
-var _executeSpecsWithCapabilities = function(server, capabilities, runnerArgs) {
-  var capability = capabilities.splice(0, 1)[0];
-  console.log('Execute specs with ' + capability.browserName);
-  executeSpecsWithCapabilities(server, capability, runnerArgs, function(error, passed) {
-    if (capabilities.length === 0) {
-      cleanupServer(error, passed);
+var setupRunner = function(config, capabilities, runner, callback) {
+  config.server.createClient(capabilities, function(error, id, client) {
+    if (error) {
+      callback(error);
     } else {
-      _executeSpecsWithCapabilities(server, capabilities, runnerArgs);
+      runner.setup({
+        client: client,
+        server: config.server,
+        capabilities: capabilities,
+        runnerArgs: {
+          specs: config.specs
+        }
+      });
+      callback(null);
     }
   });
 };
-
-var executeSpecsWithCapabilities = function(server, capabilities, runnerArgs, callback) {
-  server.createClient(capabilities, function(error, id, client) {
-    var cleanup = function(error, passed, client) {
-      if (error) {
-        callback(error);
-        return;
-      }
-      server.quitClient(client, function() {
-        callback(error, passed);
-      });
-    };
-
-    var runner = require('./runner/jasmine_node.js');
-    runner({
-      client: client,
-      server: server,
-      capabilities: capabilities,
-      runnerCallback: cleanup,
-      runnerArgs: runnerArgs
-    });
-  });
-}
 
 var cleanupServer = function(error, passed) {
   if (sauceAccount) {

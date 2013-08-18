@@ -1,6 +1,8 @@
 var webdriver = require('selenium-webdriver');
 
 module.exports = function(seleniumAddress) {
+  var clients = {};
+  
   return {
     createClient: function(capabilities, callback) {
       var client = new webdriver.Builder()
@@ -11,6 +13,7 @@ module.exports = function(seleniumAddress) {
       client.manage().timeouts().setScriptTimeout(100000);
       // TODO: handle errors?
       client.getSession().then(function(session) {
+        clients[session.getId()] = client;
         callback(null, session.getId(), client);
       });
     },
@@ -19,6 +22,9 @@ module.exports = function(seleniumAddress) {
       client.quit().then(function() {
         callback();
       });
+    },
+    getClients: function() {
+      return clients;
     }
   }
 }
