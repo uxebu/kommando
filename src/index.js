@@ -33,8 +33,6 @@ var executeSpecs = function(error, config) {
   }
   var server = config.server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
   var runner = require('./runner/jasmine_node.js');
-  
-  relay.parallel
 
   var capabilities = config.capabilities;
   var runnerSetupFunctions = [];
