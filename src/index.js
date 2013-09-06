@@ -5,7 +5,7 @@ var webdriver = require('selenium-webdriver');
 var remote = require('selenium-webdriver/remote');
 var SauceLabs = require('saucelabs');
 var webdriverSetup = require('webdriver');
-var relay = require('relay');
+var async = require('async');
 
 // Default configuration.
 /*var config = {
@@ -31,49 +31,55 @@ var executeSpecs = function(error, config) {
   if (error) {
     throw error;
   }
-  var server = config.server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
+  var server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
   var runner = require('./runner/jasmine_node.js');
 
   var capabilities = config.capabilities;
-  var runnerSetupFunctions = [];
-  var runnerSetupArgs = [];
+  var runSpecsFunctions = [];
+
   for (var i = 0, l = capabilities.length; i < l; i++) {
-    runnerSetupFunctions.push(setupRunner);
-    runnerSetupArgs.push([
-      config,
-      capabilities[i],
-      runner
-    ]);
+    runSpecsFunctions.push(runSpecs.bind(this, config.specs, capabilities[i], runner, server));
   }
-  runnerSetupArgs.push(function(error) {
-    runner.run(function(error, passed) {
-      var clients = server.getClients();
-      var clientQuitFunctions = [];
-      var clientQuitArgs = [];
-      for (var key in clients) {
-        clientQuitFunctions.push(server.quitClient);
-        clientQuitArgs.push([clients[key]]);
-      }
-      clientQuitArgs.push(cleanupServer);
-      var quitClients = relay.parallel.apply(server, clientQuitFunctions);
-      quitClients.apply(null, clientQuitArgs);
-    });
+
+  async.series(runSpecsFunctions, function(error, results) {
+    console.log(error, results);
   });
-  var runnerSetup = relay.parallel.apply(null, runnerSetupFunctions);
-  runnerSetup.apply(null, runnerSetupArgs);
 };
 
-var setupRunner = function(config, capabilities, runner, callback) {
-  config.server.createClient(capabilities, function(error, id, client) {
+var runSpecs = function(specs, capabilities, runner, server, callback) {
+  setupRunner(specs, capabilities, runner, server, function(error) {
+    if (error) {
+      callback(error);
+    } else {
+      runner.run(function(error, passed) {
+        if (error) {
+          callback(error, false);
+          return;
+        }
+        var clients = server.getClients();
+        var clientQuitFunctions = [];
+        for (var key in clients) {
+          clientQuitFunctions.push(server.quitClient.bind(server, clients[key]))
+        }
+        async.parallel(clientQuitFunctions, function(error) {
+          callback(error, passed);
+        });
+      });
+    }
+  })
+};
+
+var setupRunner = function(specs, capabilities, runner, server, callback) {
+  server.createClient(capabilities, function(error, id, client) {
     if (error) {
       callback(error);
     } else {
       runner.setup({
         client: client,
-        server: config.server,
+        server: server,
         capabilities: capabilities,
         runnerArgs: {
-          specs: config.specs
+          specs: specs
         }
       });
       callback(null);

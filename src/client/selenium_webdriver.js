@@ -19,8 +19,12 @@ module.exports = function(seleniumAddress) {
     },
     quitClient: function(client, callback) {
       // TODO: handle errors?
-      client.quit().then(function() {
-        callback();
+      client.getSession().then(function(session) {
+        var sessionId = session.getId();
+        client.quit().then(function() {
+          delete clients[sessionId];
+          callback();
+        });
       });
     },
     getClients: function() {
