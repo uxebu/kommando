@@ -148,22 +148,3 @@ if (config.sauceUser && config.sauceKey) {
 }
 
 module.exports = run;
-
-/*run({
-  seleniumAddress: 'http://localhost:4444/wd/hub',
-  capabilities: webdriver.Capabilities.phantomjs(),
-  specFolders: ['./src']
-});
-*/
-run({
-  capabilities: [
-    {browserName: 'phantomjs'},
-    {browserName: 'chrome'},
-    {browserName: 'firefox'},
-    {browserName: 'safari'}
-  ],
-  specs: [
-    '/Users/tobias/projects/pro7/kommando/test/integration/foo-spec.js',
-    '/Users/tobias/projects/pro7/kommando/test/integration/bar-spec.js'
-  ]
-});
