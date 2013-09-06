@@ -14,7 +14,9 @@ module.exports = function(seleniumAddress) {
       // TODO: handle errors?
       client.getSession().then(function(session) {
         clients[session.getId()] = client;
-        callback(null, session.getId(), client);
+        callback(null, session.getId(), client, {
+          webdriver: webdriver
+        });
       });
     },
     quitClient: function(client, callback) {

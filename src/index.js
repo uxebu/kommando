@@ -4,7 +4,7 @@ var fs = require('fs');
 var webdriver = require('selenium-webdriver');
 var remote = require('selenium-webdriver/remote');
 var SauceLabs = require('saucelabs');
-var webdriverSetup = require('webdriver');
+var webdrvr = require('webdrvr');
 var async = require('async');
 
 // Default configuration.
@@ -133,8 +133,8 @@ var runWithSeleniumAddress = function(config, callback) {
 
 var runWithSeleniumServer = function(config, callback) {
   config.seleniumArgs = config.seleniumArgs || [];
-  seleniumServer = new remote.SeleniumServer(webdriverSetup.selenium.path, {
-    args: webdriverSetup.args.concat(config.seleniumArgs)
+  seleniumServer = new remote.SeleniumServer(webdrvr.selenium.path, {
+    args: webdrvr.args.concat(config.seleniumArgs)
   });
   seleniumServer.start().then(function(url) {
     console.log('Selenium standalone server started at ' + url);
