@@ -5,7 +5,4 @@ describe('bar', function() {
     searchBox.sendKeys('webdriver');
     expect(searchBox.getAttribute('value')).toBe('webdriver');
   });
-  it('blubb', function() {
-    expect('foo').toBe('foo');
-  });
 });
