@@ -23,10 +23,12 @@ module.exports = function(seleniumAddress) {
       // TODO: handle errors?
       client.getSession().then(function(session) {
         var sessionId = session.getId();
-        client.quit().then(function() {
+        if (clients[sessionId]) {
           delete clients[sessionId];
-          callback();
-        });
+          client.quit().then(function() {
+            callback();
+          });
+        }
       });
     },
     getClients: function() {

@@ -47,6 +47,7 @@ var executeSpecs = function(error, config) {
 };
 
 var runSpecs = function(specs, capabilities, runner, server, callback) {
+  console.log('Run specs using "' + capabilities.browserName + '"');
   setupRunner(specs, capabilities, runner, server, function(error) {
     if (error) {
       callback(error);
@@ -61,7 +62,7 @@ var runSpecs = function(specs, capabilities, runner, server, callback) {
         for (var key in clients) {
           clientQuitFunctions.push(server.quitClient.bind(server, clients[key]))
         }
-        async.parallel(clientQuitFunctions, function(error) {
+        async.series(clientQuitFunctions, function(error) {
           callback(error, passed);
         });
       });
@@ -70,7 +71,7 @@ var runSpecs = function(specs, capabilities, runner, server, callback) {
 };
 
 var setupRunner = function(specs, capabilities, runner, server, callback) {
-  server.createClient(capabilities, function(error, id, client) {
+  server.createClient(capabilities, function(error, id, client, data) {
     if (error) {
       callback(error);
     } else {

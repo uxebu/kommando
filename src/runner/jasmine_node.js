@@ -11,15 +11,8 @@ var SandboxedModule = require('sandboxed-module');
 - seleniumAddress
 */
 
-var initialRun = true;
-var currentConfig;
-var counter = 0;
-
 module.exports = {
   setup: function(config) {
-    config.client.getCapabilities().then(function(caps) {
-      console.log(caps.get('browserName'));
-    });
     describe(config.capabilities.browserName, function() {
       for (var i = 0, l = config.runnerArgs.specs.length; i < l; i++) {
         SandboxedModule.require(config.runnerArgs.specs[i], {
