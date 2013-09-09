@@ -6,7 +6,9 @@ describe('foo', function() {
   });
   
   it('bar', function() {
-    searchBox.sendKeys('webdriver');
-    expect(searchBox.getAttribute('value')).toBe('webdriver');
+    kommando.server.createClient(kommando.capabilities, function(error, id, client, data) {
+      searchBox.sendKeys('webdriver');
+      expect(searchBox.getAttribute('value')).toBe('webdriver');
+    });
   });
 });

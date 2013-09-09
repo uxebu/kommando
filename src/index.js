@@ -31,14 +31,12 @@ var executeSpecs = function(error, config) {
   if (error) {
     throw error;
   }
-  var server = require('./client/selenium_webdriver.js')(config.seleniumAddress);
-  var runner = require('./runner/jasmine_node.js');
 
   var capabilities = config.capabilities;
   var runSpecsFunctions = [];
 
   for (var i = 0, l = capabilities.length; i < l; i++) {
-    runSpecsFunctions.push(runSpecs.bind(this, config.specs, config.seleniumAddress, capabilities[i], runner, server));
+    runSpecsFunctions.push(runSpecs.bind(this, config.specs, config.seleniumAddress, capabilities[i]));
   }
 
   async.series(runSpecsFunctions, function(error, results) {
@@ -46,7 +44,7 @@ var executeSpecs = function(error, config) {
   });
 };
 
-var runSpecs = function(specs, seleniumAddress, capabilities, runner, server, callback) {
+var runSpecs = function(specs, seleniumAddress, capabilities, callback) {
   console.log('Run specs using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'child.js'));
   child.send({
@@ -54,9 +52,7 @@ var runSpecs = function(specs, seleniumAddress, capabilities, runner, server, ca
     capabilities: capabilities,
     runnerArgs: {
       specs: specs
-    },
-    runner: runner,
-    server: server
+    }
   });
   child.on('message', function(msg) {
     child.disconnect();
