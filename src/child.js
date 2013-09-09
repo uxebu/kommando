@@ -17,25 +17,22 @@ process.on('message', function(config) {
       runnerArgs: config.runnerArgs
     });
     runner.run(function(error, passed) {
-      process.send({
-        error: error,
-        passed: passed
+      var clients = server.getClients();
+      var clientQuitFunctions = [];
+      for (var key in clients) {
+        clientQuitFunctions.push(server.quitClient.bind(server, clients[key]))
+      }
+      async.series(clientQuitFunctions, function(error) {
+        process.send({
+          error: error,
+          passed: passed,
+          clientId: id
+        });
       });
     });
   });
 });
 
 process.on('disconnect', function() {
-  var clients = server.getClients();
-  var clientQuitFunctions = [];
-  for (var key in clients) {
-    clientQuitFunctions.push(server.quitClient.bind(server, clients[key]))
-  }
-  async.series(clientQuitFunctions, function(error) {
-    if (error) {
-      process.exit(1);
-    } else {
-      process.exit(0);
-    }
-  });
+  process.exit(0);
 });

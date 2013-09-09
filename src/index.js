@@ -24,7 +24,6 @@ var async = require('async');
   specs: [] // glob
 }*/
 
-var runnerCount = 0;
 var seleniumServer;
 
 var executeSpecs = function(error, config) {
@@ -41,6 +40,7 @@ var executeSpecs = function(error, config) {
 
   async.series(runSpecsFunctions, function(error, results) {
     console.log(error, results);
+    cleanupServer(null, true);
   });
 };
 
@@ -56,7 +56,10 @@ var runSpecs = function(specs, seleniumAddress, capabilities, callback) {
   });
   child.on('message', function(msg) {
     child.disconnect();
-    callback(msg.error, msg.passed);
+    callback(msg.error, {
+      passed: msg.passed,
+      clientId: msg.clientId
+    });
   });
 };
 
@@ -65,13 +68,11 @@ var cleanupServer = function(error, passed) {
     sauceAccount.updateJob(id, {passed: passed}, function() {});
   }
 
-  if (runnerCount === 0) {
-    if (seleniumServer) {
-      console.log('Shutting down selenium standalone server');
-      seleniumServer.stop();
-    }
-    process.exit(passed ? 0 : 1);
-  };
+  if (seleniumServer) {
+    console.log('Shutting down selenium standalone server');
+    seleniumServer.stop();
+  }
+  process.exit(passed ? 0 : 1);
 };
 
 var run = function(config) {
