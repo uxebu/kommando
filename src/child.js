@@ -1,11 +1,10 @@
 var async = require('async');
 var lodash = require('lodash');
-var runner = require('./runner/jasmine_node');
-var serverModule = require('./client/selenium_webdriver.js');
-var server;
 
 process.on('message', function(config) {
-  server = serverModule(config.seleniumAddress);
+  var runner = require(config.testRunner);
+  var server = require(config.webdriverClient)(config.seleniumAddress);
+
   server.createClient(config.capabilities, function(error, id, client, data) {
     var kommando = lodash.extend({}, data, {
       client: client,

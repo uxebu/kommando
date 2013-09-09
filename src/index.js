@@ -35,7 +35,9 @@ var executeSpecs = function(error, config) {
   var runSpecsFunctions = [];
 
   for (var i = 0, l = capabilities.length; i < l; i++) {
-    runSpecsFunctions.push(runSpecs.bind(this, config.specs, config.seleniumAddress, capabilities[i]));
+    runSpecsFunctions.push(runSpecs.bind(
+      this, config.specs, config.seleniumAddress, capabilities[i], config.webdriverClient, config.testRunner
+    ));
   }
 
   async.series(runSpecsFunctions, function(error, results) {
@@ -44,12 +46,14 @@ var executeSpecs = function(error, config) {
   });
 };
 
-var runSpecs = function(specs, seleniumAddress, capabilities, callback) {
+var runSpecs = function(specs, seleniumAddress, capabilities, webdriverClient, testRunner, callback) {
   console.log('Run specs using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'child.js'));
   child.send({
     seleniumAddress: seleniumAddress,
     capabilities: capabilities,
+    webdriverClient: webdriverClient,
+    testRunner: testRunner,
     runnerArgs: {
       specs: specs
     }
@@ -76,6 +80,12 @@ var cleanupServer = function(error, passed) {
 };
 
 var run = function(config) {
+  if (!config.webdriverClient) {
+    config.webdriverClient = path.join(__dirname, 'client', 'selenium_webdriver.js');
+  }
+  if (!config.testRunner) {
+    config.testRunner = path.join(__dirname, 'runner', 'jasmine_node.js');
+  }
   if (config.sauceUser && config.sauceKey) {
     console.log('Using SauceLabs selenium server at ' + config.seleniumAddress);
     runWithSauceLabs(config, executeSpecs);
