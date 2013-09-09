@@ -1,8 +1,8 @@
 describe('foo', function() {
   var searchBox;
   beforeEach(function() {
-    webdriverClient.get('http://www.google.de');
-    searchBox = webdriverClient.findElement(webdriver.By.name('q'));
+    kommando.client.get('http://www.google.de');
+    searchBox = kommando.client.findElement(kommando.webdriver.By.name('q'));
   });
   
   it('bar', function() {
