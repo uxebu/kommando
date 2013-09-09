@@ -38,7 +38,7 @@ var executeSpecs = function(error, config) {
   var runSpecsFunctions = [];
 
   for (var i = 0, l = capabilities.length; i < l; i++) {
-    runSpecsFunctions.push(runSpecs.bind(this, config.specs, capabilities[i], runner, server));
+    runSpecsFunctions.push(runSpecs.bind(this, config.specs, config.seleniumAddress, capabilities[i], runner, server));
   }
 
   async.series(runSpecsFunctions, function(error, results) {
@@ -46,45 +46,21 @@ var executeSpecs = function(error, config) {
   });
 };
 
-var runSpecs = function(specs, capabilities, runner, server, callback) {
+var runSpecs = function(specs, seleniumAddress, capabilities, runner, server, callback) {
   console.log('Run specs using "' + capabilities.browserName + '"');
-  setupRunner(specs, capabilities, runner, server, function(error) {
-    if (error) {
-      callback(error);
-    } else {
-      runner.run(function(error, passed) {
-        if (error) {
-          callback(error, false);
-          return;
-        }
-        var clients = server.getClients();
-        var clientQuitFunctions = [];
-        for (var key in clients) {
-          clientQuitFunctions.push(server.quitClient.bind(server, clients[key]))
-        }
-        async.series(clientQuitFunctions, function(error) {
-          callback(error, passed);
-        });
-      });
-    }
-  })
-};
-
-var setupRunner = function(specs, capabilities, runner, server, callback) {
-  server.createClient(capabilities, function(error, id, client, data) {
-    if (error) {
-      callback(error);
-    } else {
-      runner.setup({
-        client: client,
-        server: server,
-        capabilities: capabilities,
-        runnerArgs: {
-          specs: specs
-        }
-      });
-      callback(null);
-    }
+  var child = require('child_process').fork(path.join(__dirname, 'child.js'));
+  child.send({
+    seleniumAddress: seleniumAddress,
+    capabilities: capabilities,
+    runnerArgs: {
+      specs: specs
+    },
+    runner: runner,
+    server: server
+  });
+  child.on('message', function(msg) {
+    child.disconnect();
+    callback(msg.error, msg.passed);
   });
 };
 
