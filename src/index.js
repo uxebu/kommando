@@ -70,11 +70,11 @@ var run = function(config) {
     config.testRunner = path.join(__dirname, 'runner', 'jasmine_node.js');
   }
   if (config.sauceUser && config.sauceKey) {
-    console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
     runWithSauceLabs(config, executeSpecs);
+    console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
   } else if (config.seleniumUrl) {
-    console.log('Using the selenium server at ' + config.seleniumUrl);
     runWithSeleniumAddress(config, executeSpecs);
+    console.log('Using the selenium server at ' + config.seleniumUrl);
   } else {
     console.log('Starting selenium standalone server...');
     runWithSeleniumServer(config, executeSpecs);

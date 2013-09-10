@@ -7,7 +7,7 @@ module.exports = {
   setup: function(config) {
     var options = {
       globals: ['should', 'kommando'],
-      timeout: 3000,
+      timeout: 10000,
       ignoreLeaks: false,
       ui: 'bdd',
       reporter: 'spec'
