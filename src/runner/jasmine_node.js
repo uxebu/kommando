@@ -1,10 +1,12 @@
 var jasmine = require('jasmine-node');
-require('./jasminewd.js');
 
 var SandboxedModule = require('sandboxed-module');
 
 module.exports = {
   setup: function(config) {
+    if (config.kommando.server.type === 'selenium-webdriver') {
+      require('./jasminewd.js');
+    }
     describe(config.kommando.capabilities.browserName, function() {
       for (var i = 0, l = config.runnerArgs.specs.length; i < l; i++) {
         SandboxedModule.require(config.runnerArgs.specs[i], {

@@ -2,8 +2,9 @@ var webdriver = require('selenium-webdriver');
 
 module.exports = function(seleniumUrl) {
   var clients = {};
-  
+
   return {
+    type: 'selenium-webdriver',
     createClient: function(capabilities, callback) {
       var client = new webdriver.Builder()
         .usingServer(seleniumUrl)
