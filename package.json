@@ -15,7 +15,6 @@
     "selenium-webdriver": "~2.34.0",
     "saucelabs": "~0.1.0",
     "jasmine-node": "~1.10.2",
-    "sauce-tunnel": "~1.0.1",
     "phantomjs": "~1.9.1-0",
     "webdrvr": "~2.35.0-2",
     "sandboxed-module": "~0.2.1",

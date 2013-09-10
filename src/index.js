@@ -7,23 +7,6 @@ var SauceLabs = require('saucelabs');
 var webdrvr = require('webdrvr');
 var async = require('async');
 
-// Default configuration.
-/*var config = {
-  sauceUser: '',
-  sauceKey: '',
-  sauceTunneled: '',
-
-  seleniumArgs: [],
-
-  seleniumUrl: null,
-
-  capabilities: {
-    'browserName': 'chrome'
-  },
-  baseUrl: '',
-  specs: [] // glob
-}*/
-
 var seleniumServer;
 
 var executeSpecs = function(error, config) {
