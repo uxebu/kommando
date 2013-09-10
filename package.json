@@ -3,14 +3,20 @@
   "name": "kommando",
   "description": "Webdriver wrapper for various test runners",
   "version": "0.0.1",
+  "homepage": "https://github.com/uxebu/kommando",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git://github.com/uxebu/kommando.git"
   },
   "main": "src/index.js",
   "bin": {
     "kommando": "./bin/kommando"
   },
+  "author": {
+    "name": "Tobias von Klipstein",
+    "email": "tk@uxebu.com"
+  },
+  "license": "MIT",
   "dependencies": {
     "selenium-webdriver": "~2.34.0",
     "saucelabs": "~0.1.0",
@@ -24,6 +30,6 @@
   },
   "devDependencies": {},
   "engines": {
-    "node": ">=0.8"
+    "node": ">=0.10"
   }
 }
