@@ -3,13 +3,6 @@ require('./jasminewd.js');
 
 var SandboxedModule = require('sandboxed-module');
 
-/*
-- browserName (capabilities)
-- baseUrl
-- imageUrl
-- seleniumAddress
-*/
-
 module.exports = {
   setup: function(config) {
     describe(config.kommando.capabilities.browserName, function() {

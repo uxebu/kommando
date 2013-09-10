@@ -1,12 +1,12 @@
 var webdriver = require('selenium-webdriver');
 
-module.exports = function(seleniumAddress) {
+module.exports = function(seleniumUrl) {
   var clients = {};
   
   return {
     createClient: function(capabilities, callback) {
       var client = new webdriver.Builder()
-        .usingServer(seleniumAddress)
+        .usingServer(seleniumUrl)
         .withCapabilities(capabilities)
         .build();
 

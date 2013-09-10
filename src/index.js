@@ -15,7 +15,7 @@ var async = require('async');
 
   seleniumArgs: [],
 
-  seleniumAddress: null,
+  seleniumUrl: null,
 
   capabilities: {
     'browserName': 'chrome'
@@ -36,7 +36,7 @@ var executeSpecs = function(error, config) {
 
   for (var i = 0, l = capabilities.length; i < l; i++) {
     runSpecsFunctions.push(runSpecs.bind(
-      this, config.specs, config.seleniumAddress, capabilities[i], config.webdriverClient, config.testRunner
+      this, config.specs, config.seleniumUrl, capabilities[i], config.webdriverClient, config.testRunner
     ));
   }
 
@@ -46,11 +46,11 @@ var executeSpecs = function(error, config) {
   });
 };
 
-var runSpecs = function(specs, seleniumAddress, capabilities, webdriverClient, testRunner, callback) {
+var runSpecs = function(specs, seleniumUrl, capabilities, webdriverClient, testRunner, callback) {
   console.log('Run specs using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'child.js'));
   child.send({
-    seleniumAddress: seleniumAddress,
+    seleniumUrl: seleniumUrl,
     capabilities: capabilities,
     webdriverClient: webdriverClient,
     testRunner: testRunner,
@@ -87,10 +87,10 @@ var run = function(config) {
     config.testRunner = path.join(__dirname, 'runner', 'jasmine_node.js');
   }
   if (config.sauceUser && config.sauceKey) {
-    console.log('Using SauceLabs selenium server at ' + config.seleniumAddress);
+    console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
     runWithSauceLabs(config, executeSpecs);
-  } else if (config.seleniumAddress) {
-    console.log('Using the selenium server at ' + config.seleniumAddress);
+  } else if (config.seleniumUrl) {
+    console.log('Using the selenium server at ' + config.seleniumUrl);
     runWithSeleniumAddress(config, executeSpecs);
   } else {
     console.log('Starting selenium standalone server...');
@@ -101,7 +101,7 @@ var run = function(config) {
 var runWithSauceLabs = function(config, callback) {
   config.capabilities.username = config.sauceUser;
   config.capabilities.accessKey = config.sauceKey;
-  config.seleniumAddress = [
+  config.seleniumUrl = [
     'http://',
     config.sauceUser,
     ':',
@@ -122,7 +122,7 @@ var runWithSeleniumServer = function(config, callback) {
   });
   seleniumServer.start().then(function(url) {
     console.log('Selenium standalone server started at ' + url);
-    config.seleniumAddress = url;
+    config.seleniumUrl = url;
     callback(null, config);
   });
 };

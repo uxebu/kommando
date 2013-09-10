@@ -15,7 +15,7 @@ run({
   ]
 });
 /*run({
-  seleniumAddress: 'http://localhost:9004/wd/hub',
+  seleniumUrl: 'http://localhost:9004/wd/hub',
   capabilities: [
     {
       device: 'iPhone Simulator',

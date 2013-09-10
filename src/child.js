@@ -3,7 +3,7 @@ var lodash = require('lodash');
 
 process.on('message', function(config) {
   var runner = require(config.testRunner);
-  var server = require(config.webdriverClient)(config.seleniumAddress);
+  var server = require(config.webdriverClient)(config.seleniumUrl);
 
   server.createClient(config.capabilities, function(error, id, client, data) {
     var kommando = lodash.extend({}, data, {
