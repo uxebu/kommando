@@ -2,12 +2,15 @@
   "author": "uxebu",
   "name": "kommando",
   "description": "Webdriver wrapper for various test runners",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": ""
   },
   "main": "src/index.js",
+  "bin": {
+    "kommando": "./bin/kommando"
+  },
   "dependencies": {
     "selenium-webdriver": "~2.34.0",
     "saucelabs": "~0.1.0",
