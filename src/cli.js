@@ -26,13 +26,16 @@ var argv = optimist
     desc: 'URL to a selenium server (e.g. http://localhost:4444/wd/hub)',
     type: 'string'
   })
+  .option('selenium-args', {
+    desc: 'Additional selenium arguments',
+    type: 'string'
+  })
   .option('sauce-user', {
     desc: 'Sauce Labs User'
   })
   .option('sauce-key', {
     desc: 'Sauce Labs Key'
   })
-  .demand('_')
   .argv;
 
 if (argv.version) {
@@ -42,6 +45,12 @@ if (argv.version) {
 
 if (argv.help) {
   optimist.showHelp();
+  process.exit(1);
+}
+
+if (argv._.length < 1) {
+  optimist.showHelp();
+  console.log('Pass at least one test file.');
   process.exit(1);
 }
 
@@ -60,6 +69,7 @@ kommandoRunner({
   capabilities: capabilities,
   sauceUser: argv['sauce-user'],
   sauceKey: argv['sauce-key'],
+  seleniumArgs: argv['selenium-args'],
   seleniumUrl: argv['selenium-url'],
   specs: tests
 });
