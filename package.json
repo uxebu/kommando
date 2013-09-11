@@ -1,8 +1,4 @@
 {
-  "author": {
-    "name": "Tobias von Klipstein",
-    "email": "tk@uxebu.com"
-  },
   "name": "kommando",
   "description": "Webdriver wrapper for various test runners",
   "version": "0.0.2",
@@ -14,6 +10,10 @@
   "main": "src/index.js",
   "bin": {
     "kommando": "./bin/kommando"
+  },
+  "author": {
+    "name": "Tobias von Klipstein",
+    "email": "tk@uxebu.com"
   },
   "license": "MIT",
   "dependencies": {
