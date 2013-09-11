@@ -1,3 +1,4 @@
+var lodash = require('lodash');
 var optimist = require('optimist');
 var path = require('path');
 
@@ -22,12 +23,13 @@ var argv = optimist
     desc: 'Browser(s) in which the tests should be executed',
     default: 'phantomjs'
   })
+  .option('config', {
+    alias: 'c',
+    type: 'string',
+    desc: 'Specifies JSON-formatted configuration file'
+  })
   .option('selenium-url', {
     desc: 'URL to a selenium server (e.g. http://localhost:4444/wd/hub)',
-    type: 'string'
-  })
-  .option('selenium-args', {
-    desc: 'Additional selenium arguments',
     type: 'string'
   })
   .option('sauce-user', {
@@ -62,16 +64,6 @@ if (argv.help) {
   process.exit(1);
 }
 
-if (argv._.length < 1) {
-  optimist.showHelp();
-  console.log('Pass at least one test file.');
-  process.exit(1);
-}
-
-var tests = argv._.map(function(test) {
-  return path.resolve(test);
-});
-
 var browsers = typeof argv.browser === 'string' ? [argv.browser] : argv.browser;
 var capabilities = browsers.map(function(browser) {
   return {
@@ -80,14 +72,29 @@ var capabilities = browsers.map(function(browser) {
 });
 var sauceTags = typeof argv['sauce-tag'] === 'string' ? [argv['sauce-tag']] : argv['sauce-tag'];
 
-kommandoRunner({
+var kommandoConfig = argv['config'] ? require(path.resolve(argv['config'])) : {};
+
+lodash.merge(kommandoConfig, {
   capabilities: capabilities,
   sauceUser: argv['sauce-user'],
   sauceKey: argv['sauce-key'],
   sauceName: argv['sauce-name'],
   sauceBuild: argv['sauce-build'],
   sauceTags: sauceTags,
-  seleniumArgs: argv['selenium-args'],
   seleniumUrl: argv['selenium-url'],
-  specs: tests
+  specs: argv._
 });
+
+if (kommandoConfig.specs.length < 1) {
+  optimist.showHelp();
+  console.log('Pass at least one test file.');
+  process.exit(1);
+}
+
+var pathFrom = argv.config ? path.dirname(path.resolve(argv['config'])) : process.cwd();
+
+kommandoConfig.specs = kommandoConfig.specs.map(function(test) {
+  return path.resolve(pathFrom, test);
+});
+
+kommandoRunner(kommandoConfig);
