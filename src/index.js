@@ -73,10 +73,10 @@ var shutdown = function(config, error, results) {
 
 var run = function(config) {
   if (!config.webdriverClient) {
-    config.webdriverClient = path.join(__dirname, 'client', 'selenium_webdriver.js');
+    config.webdriverClient = path.join(__dirname, 'client', 'selenium-webdriver.js');
   }
   if (!config.testRunner) {
-    config.testRunner = path.join(__dirname, 'runner', 'jasmine_node.js');
+    config.testRunner = path.join(__dirname, 'runner', 'jasmine-node.js');
   }
   if (config.sauceUser && config.sauceKey) {
     runWithSauceLabs(config, executeSpecs);

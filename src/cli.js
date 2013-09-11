@@ -7,7 +7,7 @@ var kommandoRunner = require('./index.js');
 var packageJson = require(path.join(__dirname, '..', 'package.json'));
 
 var argv = optimist
-  .usage('$0 [options] TESTFILES')
+  .usage('Usage: \n  $0 [options] TESTFILES')
   .wrap(80)
   .option('version', {
     alias: 'v',
@@ -23,10 +23,16 @@ var argv = optimist
     desc: 'Browser(s) in which the tests should be executed',
     default: 'phantomjs'
   })
+  .option('library', {
+    alias: 'l',
+    type: 'string',
+    desc: 'Webdriver JS library that should be used',
+    default: 'selenium-webdriver'
+  })
   .option('config', {
     alias: 'c',
     type: 'string',
-    desc: 'Specifies JSON-formatted configuration file'
+    desc: 'Specifies JSON-formatted configuration file (CLI arguments overwrite config settings)'
   })
   .option('selenium-url', {
     desc: 'URL to a selenium server (e.g. http://localhost:4444/wd/hub)',
@@ -72,7 +78,7 @@ var capabilities = browsers.map(function(browser) {
 });
 var sauceTags = typeof argv['sauce-tag'] === 'string' ? [argv['sauce-tag']] : argv['sauce-tag'];
 
-var kommandoConfig = argv['config'] ? require(path.resolve(argv['config'])) : {};
+var kommandoConfig = argv.config ? require(path.resolve(argv.config)) : {};
 
 lodash.merge(kommandoConfig, {
   capabilities: capabilities,
@@ -91,7 +97,8 @@ if (kommandoConfig.specs.length < 1) {
   process.exit(1);
 }
 
-var pathFrom = argv.config ? path.dirname(path.resolve(argv['config'])) : process.cwd();
+// resolve test-files of config-file relative to it
+var pathFrom = argv.config ? path.dirname(path.resolve(argv.config)) : process.cwd();
 
 kommandoConfig.specs = kommandoConfig.specs.map(function(test) {
   return path.resolve(pathFrom, test);

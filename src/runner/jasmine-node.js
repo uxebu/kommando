@@ -1,20 +1,16 @@
 var jasmine = require('jasmine-node');
 
-var SandboxedModule = require('sandboxed-module');
-
 module.exports = {
   setup: function(config) {
     if (config.kommando.server.type === 'selenium-webdriver') {
       require('./jasminewd.js');
     }
     jasmine.getEnv().defaultTimeoutInterval = 10000;
+    global.kommando = config.kommando;
+
     describe(config.kommando.capabilities.browserName, function() {
       for (var i = 0, l = config.runnerArgs.specs.length; i < l; i++) {
-        SandboxedModule.require(config.runnerArgs.specs[i], {
-          locals: {
-            kommando: config.kommando
-          }
-        });
+        require(config.runnerArgs.specs[i]);
       }
     });
   },
