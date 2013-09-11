@@ -13,7 +13,7 @@ process.on('message', function(config) {
     });
     runner.setup({
       kommando: kommando,
-      runnerArgs: config.runnerArgs
+      tests: config.tests
     });
     runner.run(function(error, passed) {
       var clients = server.getClients();

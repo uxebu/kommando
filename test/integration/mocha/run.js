@@ -9,7 +9,7 @@ run({
     {browserName: 'firefox'},
     {browserName: 'safari'}*/
   ],
-  specs: [
+  tests: [
     path.join(__dirname, 'foo.js'),
     path.join(__dirname, 'bar.js')
   ],

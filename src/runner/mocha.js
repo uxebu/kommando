@@ -32,8 +32,8 @@ module.exports = {
       });
     }
 
-    for (var i = 0, l = config.runnerArgs.specs.length; i < l; i++) {
-      mochaInstance.addFile(config.runnerArgs.specs[i]);
+    for (var i = 0, l = config.tests.length; i < l; i++) {
+      mochaInstance.addFile(config.tests[i]);
     }
   },
   run: function(callback) {

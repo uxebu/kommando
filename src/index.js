@@ -10,6 +10,7 @@ var async = require('async');
 
 var defaultConfig = {
   capabilities: [],
+  tests: [],
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
   runnerArgs: {},
@@ -20,8 +21,7 @@ var defaultConfig = {
   sauceName: undefined,
   sauceBuild: undefined,
   sauceTags: undefined,
-  seleniumUrl: undefined,
-  specs: []
+  seleniumUrl: undefined
 };
 
 var run = function(config) {
@@ -31,14 +31,14 @@ var run = function(config) {
   config.client = detectClient(config.client);
 
   if (config.sauceUser && config.sauceKey) {
-    runWithSauceLabs(config, executeSpecs);
+    runWithSauceLabs(config, executeTests);
     console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
   } else if (config.seleniumUrl) {
-    runWithSeleniumAddress(config, executeSpecs);
+    runWithSeleniumAddress(config, executeTests);
     console.log('Using the selenium server at ' + config.seleniumUrl);
   } else {
     console.log('Starting selenium standalone server...');
-    runWithSeleniumServer(config, executeSpecs);
+    runWithSeleniumServer(config, executeTests);
   }
 };
 
@@ -64,21 +64,21 @@ var detectClient = function(client) {
   }
 }
 
-var executeSpecs = function(error, config) {
+var executeTests = function(error, config) {
   if (error) {
     throw error;
   }
 
   var capabilities = config.capabilities;
-  var runSpecsFunctions = [];
+  var runTestsFunctions = [];
 
   for (var i = 0, l = capabilities.length; i < l; i++) {
-    runSpecsFunctions.push(runSpecs.bind(
-      this, config.specs, config.seleniumUrl, capabilities[i], config.client, config.runner
+    runTestsFunctions.push(runTests.bind(
+      this, config.tests, config.seleniumUrl, capabilities[i], config.client, config.runner
     ));
   }
 
-  async.series(runSpecsFunctions, function(error, results) {
+  async.series(runTestsFunctions, function(error, results) {
     var sauceUpdateFunctions = [];
     if (config.sauceAccount) {
       lodash.forEach(results, function(result) {
@@ -95,17 +95,15 @@ var executeSpecs = function(error, config) {
   });
 };
 
-var runSpecs = function(specs, seleniumUrl, capabilities, client, runner, callback) {
-  console.log('Run specs using "' + capabilities.browserName + '"');
+var runTests = function(tests, seleniumUrl, capabilities, client, runner, callback) {
+  console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'child.js'));
   child.send({
     seleniumUrl: seleniumUrl,
     capabilities: capabilities,
     client: client,
     runner: runner,
-    runnerArgs: {
-      specs: specs
-    }
+    tests: tests
   });
   child.on('message', function(msg) {
     child.disconnect();

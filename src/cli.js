@@ -96,10 +96,10 @@ lodash.merge(kommandoConfig, {
   sauceBuild: argv['sauce-build'],
   sauceTags: sauceTags,
   seleniumUrl: argv['selenium-url'],
-  specs: argv._
+  tests: argv._
 });
 
-if (kommandoConfig.specs.length < 1) {
+if (kommandoConfig.tests.length < 1) {
   optimist.showHelp();
   console.log('Pass at least one test file.');
   process.exit(1);
@@ -108,7 +108,7 @@ if (kommandoConfig.specs.length < 1) {
 // resolve test-files of config-file relative to it
 var pathFrom = argv.config ? path.dirname(path.resolve(argv.config)) : process.cwd();
 
-kommandoConfig.specs = kommandoConfig.specs.map(function(test) {
+kommandoConfig.tests = kommandoConfig.tests.map(function(test) {
   return path.resolve(pathFrom, test);
 });
 
