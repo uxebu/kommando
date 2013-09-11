@@ -2,8 +2,8 @@ var async = require('async');
 var lodash = require('lodash');
 
 process.on('message', function(config) {
-  var runner = require(config.testRunner);
-  var server = require(config.webdriverClient)(config.seleniumUrl);
+  var runner = require(config.runner);
+  var server = require(config.client)(config.seleniumUrl);
 
   server.createClient(config.capabilities, function(error, id, client, data) {
     var kommando = lodash.extend({}, data, {

@@ -10,7 +10,7 @@ var async = require('async');
 
 var defaultConfig = {
   capabilities: [],
-  library: 'selenium-webdriver',
+  client: 'selenium-webdriver',
   runner: 'jasmine-node',
   runnerArgs: {},
   runnerModules: [],
@@ -24,6 +24,46 @@ var defaultConfig = {
   specs: []
 };
 
+var run = function(config) {
+  config = lodash.merge({}, defaultConfig, config);
+
+  config.runner = detectRunner(config.runner);
+  config.client = detectClient(config.client);
+
+  if (config.sauceUser && config.sauceKey) {
+    runWithSauceLabs(config, executeSpecs);
+    console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
+  } else if (config.seleniumUrl) {
+    runWithSeleniumAddress(config, executeSpecs);
+    console.log('Using the selenium server at ' + config.seleniumUrl);
+  } else {
+    console.log('Starting selenium standalone server...');
+    runWithSeleniumServer(config, executeSpecs);
+  }
+};
+
+var detectRunner = function(runner) {
+  var runnerPath = path.join(__dirname, 'runner', runner + '.js');
+  if (fs.existsSync(runner)) {
+    return client;
+  } else if (fs.existsSync(runnerPath)) {
+    return runnerPath;
+  } else {
+    throw new Error('The passed "runner" module "' + runner + '" was not found.')
+  }
+};
+
+var detectClient = function(client) {
+  var clientPath = path.join(__dirname, 'client', client + '.js');
+  if (fs.existsSync(client)) {
+    return client;
+  } else if (fs.existsSync(clientPath)) {
+    return clientPath;
+  } else {
+    throw new Error('The passed "client" module "' + client + '" was not found.')
+  }
+}
+
 var executeSpecs = function(error, config) {
   if (error) {
     throw error;
@@ -34,7 +74,7 @@ var executeSpecs = function(error, config) {
 
   for (var i = 0, l = capabilities.length; i < l; i++) {
     runSpecsFunctions.push(runSpecs.bind(
-      this, config.specs, config.seleniumUrl, capabilities[i], config.webdriverClient, config.testRunner
+      this, config.specs, config.seleniumUrl, capabilities[i], config.client, config.runner
     ));
   }
 
@@ -55,14 +95,14 @@ var executeSpecs = function(error, config) {
   });
 };
 
-var runSpecs = function(specs, seleniumUrl, capabilities, webdriverClient, testRunner, callback) {
+var runSpecs = function(specs, seleniumUrl, capabilities, client, runner, callback) {
   console.log('Run specs using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'child.js'));
   child.send({
     seleniumUrl: seleniumUrl,
     capabilities: capabilities,
-    webdriverClient: webdriverClient,
-    testRunner: testRunner,
+    client: client,
+    runner: runner,
     runnerArgs: {
       specs: specs
     }
@@ -85,25 +125,6 @@ var shutdown = function(config, error, results) {
   }
 
   process.exit(passed ? 0 : 1);
-};
-
-var run = function(config) {
-  if (!config.webdriverClient) {
-    config.webdriverClient = path.join(__dirname, 'client', 'selenium-webdriver.js');
-  }
-  if (!config.testRunner) {
-    config.testRunner = path.join(__dirname, 'runner', 'jasmine-node.js');
-  }
-  if (config.sauceUser && config.sauceKey) {
-    runWithSauceLabs(config, executeSpecs);
-    console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
-  } else if (config.seleniumUrl) {
-    runWithSeleniumAddress(config, executeSpecs);
-    console.log('Using the selenium server at ' + config.seleniumUrl);
-  } else {
-    console.log('Starting selenium standalone server...');
-    runWithSeleniumServer(config, executeSpecs);
-  }
 };
 
 var runWithSauceLabs = function(config, callback) {

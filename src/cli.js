@@ -23,16 +23,16 @@ var argv = optimist
     desc: 'Browser(s) in which the tests should be executed',
     default: 'phantomjs'
   })
-  .option('library', {
-    alias: 'l',
+  .option('client', {
+    alias: 'w',
     type: 'string',
-    desc: 'Injected Webdriver JS library',
+    desc: 'Injected JS Webdriver client library',
     default: 'selenium-webdriver'
   })
   .option('runner', {
     alias: 'r',
     type: 'string',
-    desc: 'Used Test Runner',
+    desc: 'Used test runner',
     default: 'jasmine-node'
   })
   .option('config', {
@@ -87,6 +87,8 @@ var sauceTags = typeof argv['sauce-tag'] === 'string' ? [argv['sauce-tag']] : ar
 var kommandoConfig = argv.config ? require(path.resolve(argv.config)) : {};
 
 lodash.merge(kommandoConfig, {
+  client: argv['client'],
+  runner: argv['runner'],
   capabilities: capabilities,
   sauceUser: argv['sauce-user'],
   sauceKey: argv['sauce-key'],

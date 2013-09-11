@@ -12,6 +12,6 @@ run({
   specs: [
     path.join(__dirname, 'foo.js')
   ],
-  testRunner: path.join(__dirname, '..', '..', '..', 'src', 'runner', 'mocha.js'),
-  webdriverClient: path.join(__dirname, '..', '..', '..', 'src', 'client', 'wd.js')
+  runner: 'mocha',
+  client: 'wd'
 });

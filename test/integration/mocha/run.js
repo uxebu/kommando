@@ -13,5 +13,5 @@ run({
     path.join(__dirname, 'foo.js'),
     path.join(__dirname, 'bar.js')
   ],
-  testRunner: path.join(__dirname, '..', '..', '..', 'src', 'runner', 'mocha.js')
+  runner: 'mocha'
 });
