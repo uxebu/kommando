@@ -22,14 +22,15 @@
     "jasmine-node": "~1.10.2",
     "phantomjs": "~1.9.1-0",
     "webdrvr": "~2.35.0-2",
-    "sandboxed-module": "~0.2.1",
     "async": "~0.2.9",
     "lodash": "~1.3.1",
     "optimist": "~0.6.0",
     "mocha": "~1.12.1",
     "wd": "~0.1.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "expect.js": "~0.2.0"
+  },
   "engines": {
     "node": ">=0.10"
   }
