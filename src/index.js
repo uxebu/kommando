@@ -8,6 +8,22 @@ var SauceLabs = require('saucelabs');
 var webdrvr = require('webdrvr');
 var async = require('async');
 
+var defaultConfig = {
+  capabilities: [],
+  library: 'selenium-webdriver',
+  runner: 'jasmine-node',
+  runnerArgs: {},
+  runnerModules: [],
+  runnerGlobals: [],
+  sauceUser: undefined,
+  sauceKey: undefined,
+  sauceName: undefined,
+  sauceBuild: undefined,
+  sauceTags: undefined,
+  seleniumUrl: undefined,
+  specs: []
+};
+
 var executeSpecs = function(error, config) {
   if (error) {
     throw error;

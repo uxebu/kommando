@@ -26,8 +26,14 @@ var argv = optimist
   .option('library', {
     alias: 'l',
     type: 'string',
-    desc: 'Webdriver JS library that should be used',
+    desc: 'Injected Webdriver JS library',
     default: 'selenium-webdriver'
+  })
+  .option('runner', {
+    alias: 'r',
+    type: 'string',
+    desc: 'Used Test Runner',
+    default: 'jasmine-node'
   })
   .option('config', {
     alias: 'c',
