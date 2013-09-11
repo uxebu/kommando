@@ -7,6 +7,7 @@ module.exports = {
     if (config.kommando.server.type === 'selenium-webdriver') {
       require('./jasminewd.js');
     }
+    jasmine.getEnv().defaultTimeoutInterval = 10000;
     describe(config.kommando.capabilities.browserName, function() {
       for (var i = 0, l = config.runnerArgs.specs.length; i < l; i++) {
         SandboxedModule.require(config.runnerArgs.specs[i], {

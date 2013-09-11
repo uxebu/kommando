@@ -31,10 +31,24 @@ var argv = optimist
     type: 'string'
   })
   .option('sauce-user', {
-    desc: 'Sauce Labs User'
+    desc: 'Sauce Labs User',
+    type: 'string'
   })
   .option('sauce-key', {
-    desc: 'Sauce Labs Key'
+    desc: 'Sauce Labs Key',
+    type: 'string'
+  })
+  .option('sauce-name', {
+    desc: 'Name of the Sauce Labs job',
+    type: 'string'
+  })
+  .option('sauce-build', {
+    desc: 'Build number set for this Sauce Labs job',
+    type: 'string'
+  })
+  .option('sauce-tag', {
+    desc: 'Tag(s) for the Sauce Labs job',
+    type: 'string'
   })
   .argv;
 
@@ -64,11 +78,15 @@ var capabilities = browsers.map(function(browser) {
     browserName: browser
   };
 });
+var sauceTags = typeof argv['sauce-tag'] === 'string' ? [argv['sauce-tag']] : argv['sauce-tag'];
 
 kommandoRunner({
   capabilities: capabilities,
   sauceUser: argv['sauce-user'],
   sauceKey: argv['sauce-key'],
+  sauceName: argv['sauce-name'],
+  sauceBuild: argv['sauce-build'],
+  sauceTags: sauceTags,
   seleniumArgs: argv['selenium-args'],
   seleniumUrl: argv['selenium-url'],
   specs: tests

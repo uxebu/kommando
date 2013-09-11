@@ -1,6 +1,7 @@
 var util = require('util');
 var path = require('path')
 var fs = require('fs');
+var lodash = require('lodash');
 var webdriver = require('selenium-webdriver');
 var remote = require('selenium-webdriver/remote');
 var SauceLabs = require('saucelabs');
@@ -82,8 +83,15 @@ var run = function(config) {
 };
 
 var runWithSauceLabs = function(config, callback) {
-  config.capabilities.username = config.sauceUser;
-  config.capabilities.accessKey = config.sauceKey;
+  lodash.forEach(config.capabilities, function(capabilities) {
+    lodash.extend(capabilities, {
+      username: config.sauceUser,
+      accessKey: config.sauceKey,
+      name: config.sauceName,
+      build: config.sauceBuild,
+      tags: config.sauceTags
+    });
+  });
   config.seleniumUrl = [
     'http://',
     config.sauceUser,
