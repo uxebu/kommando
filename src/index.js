@@ -8,8 +8,6 @@ var SauceLabs = require('saucelabs');
 var webdrvr = require('webdrvr');
 var async = require('async');
 
-var seleniumServer;
-
 var executeSpecs = function(error, config) {
   if (error) {
     throw error;
@@ -25,8 +23,19 @@ var executeSpecs = function(error, config) {
   }
 
   async.series(runSpecsFunctions, function(error, results) {
-    console.log(error, results);
-    cleanupServer(null, true);
+    var sauceUpdateFunctions = [];
+    if (config.sauceAccount) {
+      lodash.forEach(results, function(result) {
+        sauceUpdateFunctions.push(
+          config.sauceAccount.updateJob.bind(config.sauceAccount, result.clientId, {passed: result.passed})
+        );
+      });
+      async.series(sauceUpdateFunctions, function(err) {
+        shutdown(config, error, results);
+      })
+    } else {
+      shutdown(config, error, results);
+    }
   });
 };
 
@@ -51,15 +60,14 @@ var runSpecs = function(specs, seleniumUrl, capabilities, webdriverClient, testR
   });
 };
 
-var cleanupServer = function(error, passed) {
-  if (sauceAccount) {
-    sauceAccount.updateJob(id, {passed: passed}, function() {});
+var shutdown = function(config, error, results) {
+  var passed = lodash.every(results, 'passed');
+
+  if (config.seleniumServer) {
+    console.log('Shutting down selenium standalone server');
+    config.seleniumServer.stop();
   }
 
-  if (seleniumServer) {
-    console.log('Shutting down selenium standalone server');
-    seleniumServer.stop();
-  }
   process.exit(passed ? 0 : 1);
 };
 
@@ -83,6 +91,13 @@ var run = function(config) {
 };
 
 var runWithSauceLabs = function(config, callback) {
+  if (config.sauceUser && config.sauceKey) {
+    config.sauceAccount = new SauceLabs({
+      username: config.sauceUser,
+      password: config.sauceKey
+    });
+  }
+
   lodash.forEach(config.capabilities, function(capabilities) {
     lodash.extend(capabilities, {
       username: config.sauceUser,
@@ -108,24 +123,14 @@ var runWithSeleniumAddress = function(config, callback) {
 
 var runWithSeleniumServer = function(config, callback) {
   config.seleniumArgs = config.seleniumArgs || [];
-  seleniumServer = new remote.SeleniumServer(webdrvr.selenium.path, {
+  config.seleniumServer = new remote.SeleniumServer(webdrvr.selenium.path, {
     args: webdrvr.args.concat(config.seleniumArgs)
   });
-  seleniumServer.start().then(function(url) {
+  config.seleniumServer.start().then(function(url) {
     console.log('Selenium standalone server started at ' + url);
     config.seleniumUrl = url;
     callback(null, config);
   });
 };
-
-var config = {};
-
-var sauceAccount;
-if (config.sauceUser && config.sauceKey) {
-  sauceAccount = new SauceLabs({
-    username: config.sauceUser,
-    password: config.sauceKey
-  });
-}
 
 module.exports = run;
