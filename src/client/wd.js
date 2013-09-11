@@ -11,7 +11,7 @@ module.exports = function(seleniumUrl) {
 
       client.init(capabilities, function(error, sessionId) {
         clients[sessionId] = client;
-        callback(error, sessionId, client);
+        callback(error, sessionId, client, {});
       });
     },
     quitClient: function(client, callback) {

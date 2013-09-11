@@ -6,6 +6,13 @@ process.on('message', function(config) {
   var server = require(config.client)(config.seleniumUrl);
 
   server.createClient(config.capabilities, function(error, id, client, data) {
+    if (error) {
+      process.send({
+        error: error
+      });
+      process.exit(1);
+      return;
+    }
     var kommando = lodash.extend({}, data, {
       client: client,
       server: server,
