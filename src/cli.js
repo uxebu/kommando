@@ -23,6 +23,11 @@ var argv = optimist
     desc: 'Browser(s) in which the tests should be executed',
     default: 'phantomjs'
   })
+  .option('driver', {
+    alias: 'd',
+    type: 'string',
+    desc: 'Driver providing Selenium URL'
+  })
   .option('client', {
     alias: 'w',
     type: 'string',
@@ -86,8 +91,20 @@ var sauceTags = typeof argv['sauce-tag'] === 'string' ? [argv['sauce-tag']] : ar
 
 var kommandoConfig = argv.config ? require(path.resolve(argv.config)) : {};
 
+// autodetect "driver"
+if (!argv.driver) {
+  if (argv['sauce-user'] && argv['sauce-key']) {
+    argv.driver = 'saucelabs';
+  } else if (argv['selenium-url']) {
+    argv.driver = 'selenium-gird';
+  } else {
+    argv.driver = 'selenium-server';
+  }
+}
+
 lodash.merge(kommandoConfig, {
   client: argv['client'],
+  driver: argv['driver'],
   runner: argv['runner'],
   capabilities: capabilities,
   sauceUser: argv['sauce-user'],

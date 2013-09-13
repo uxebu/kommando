@@ -7,6 +7,7 @@ var lodash = require('lodash');
 var defaultConfig = {
   capabilities: [],
   tests: [],
+  driver: 'selenium-server',
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
   runnerArgs: {},
@@ -20,73 +21,50 @@ var defaultConfig = {
   seleniumUrl: undefined
 };
 
+var detectModulePath = function(moduleName, type) {
+  var modulePath = path.join(__dirname, type, moduleName + '.js');
+  if (fs.existsSync(moduleName)) {
+    return moduleName;
+  } else if (fs.existsSync(modulePath)) {
+    return modulePath;
+  } else {
+    throw new Error('The passed "' + type + '" module "' + moduleName + '" was not found.')
+  }
+};
+
 var run = function(config) {
   config = lodash.merge({}, defaultConfig, config);
 
-  config.runner = detectRunner(config.runner);
-  config.client = detectClient(config.client);
+  var client = detectModulePath(config.client, 'client');
+  var driver = require(detectModulePath(config.driver, 'driver'));
+  var runner = detectModulePath(config.runner, 'runner');
 
-  var driver;
-
-  if (config.sauceUser && config.sauceKey) {
-    driver = require('./driver/saucelabs');
-  } else if (config.seleniumUrl) {
-    driver = require('./driver/selenium_grid');
-  } else {
-    driver = require('./driver/selenium_server');
-  }
+  var runTestsFunctions = [];
 
   driver(config, function(error, driverData) {
     if (error) {
       console.log(error);
-      shutdown(error);
+      process.exit(error ? 0 : 1);
     }
-    config.seleniumUrl = driverData.seleniumUrl;
     lodash.forEach(config.capabilities, function(capabilities) {
       lodash.merge(capabilities, driverData.capabilities);
     });
-    executeTests(config, function(error, resultData) {
+
+    // Execute tests per capability / browser
+    lodash.forEach(config.capabilities, function(capabilities) {
+      runTestsFunctions.push(runTests.bind(
+        null, config.tests, driverData.seleniumUrl, capabilities, client, runner
+      ));
+    });
+    
+    async.series(runTestsFunctions, function(error, resultData) {
       var passed = lodash.every(resultData, 'passed');
       driverData.end(resultData, function(error) {
-        shutdown(error || !passed);
+        process.exit(!error && passed ? 0 : 1);
       });
     });
+
   });
-};
-
-var detectRunner = function(runner) {
-  var runnerPath = path.join(__dirname, 'runner', runner + '.js');
-  if (fs.existsSync(runner)) {
-    return client;
-  } else if (fs.existsSync(runnerPath)) {
-    return runnerPath;
-  } else {
-    throw new Error('The passed "runner" module "' + runner + '" was not found.')
-  }
-};
-
-var detectClient = function(client) {
-  var clientPath = path.join(__dirname, 'client', client + '.js');
-  if (fs.existsSync(client)) {
-    return client;
-  } else if (fs.existsSync(clientPath)) {
-    return clientPath;
-  } else {
-    throw new Error('The passed "client" module "' + client + '" was not found.')
-  }
-}
-
-var executeTests = function(config, callback) {
-  var capabilities = config.capabilities;
-  var runTestsFunctions = [];
-
-  for (var i = 0, l = capabilities.length; i < l; i++) {
-    runTestsFunctions.push(runTests.bind(
-      this, config.tests, config.seleniumUrl, capabilities[i], config.client, config.runner
-    ));
-  }
-
-  async.series(runTestsFunctions, callback);
 };
 
 var runTests = function(tests, seleniumUrl, capabilities, client, runner, callback) {
@@ -106,10 +84,6 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, callba
       clientId: msg.clientId
     });
   });
-};
-
-var shutdown = function(error) {
-  process.exit(error ? 0 : 1);
 };
 
 module.exports = run;
