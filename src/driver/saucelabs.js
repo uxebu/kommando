@@ -1,0 +1,43 @@
+var async = require('async');
+var lodash = require('lodash');
+var SauceLabs = require('saucelabs');
+
+module.exports = function(config, callback) {
+  var sauceAccount = new SauceLabs({
+    username: config.sauceUser,
+    password: config.sauceKey
+  });
+  var seleniumUrl = [
+    'http://',
+    config.sauceUser,
+    ':',
+    config.sauceKey,
+    '@ondemand.saucelabs.com:80/wd/hub'
+  ].join('');
+
+  console.log('Using SauceLabs selenium server at: ' + seleniumUrl);
+
+  callback(null, {
+    seleniumUrl: seleniumUrl,
+    capabilities: {
+      username: config.sauceUser,
+      accessKey: config.sauceKey,
+      name: config.sauceName,
+      build: config.sauceBuild,
+      tags: config.sauceTags
+    },
+    end: function(resultData, callback) {
+      var sauceUpdateFunctions = [];
+      lodash.forEach(resultData, function(result) {
+        sauceUpdateFunctions.push(
+          sauceAccount.updateJob.bind(
+            sauceAccount, result.clientId, {passed: result.passed}
+          )
+        );
+      });
+      async.series(sauceUpdateFunctions, function(error) {
+        callback(error);
+      });
+    }
+  })
+};

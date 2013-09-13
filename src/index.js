@@ -1,12 +1,8 @@
-var util = require('util');
-var path = require('path')
 var fs = require('fs');
-var lodash = require('lodash');
-var webdriver = require('selenium-webdriver');
-var remote = require('selenium-webdriver/remote');
-var SauceLabs = require('saucelabs');
-var webdrvr = require('webdrvr');
+var path = require('path');
+
 var async = require('async');
+var lodash = require('lodash');
 
 var defaultConfig = {
   capabilities: [],
@@ -30,16 +26,32 @@ var run = function(config) {
   config.runner = detectRunner(config.runner);
   config.client = detectClient(config.client);
 
+  var driver;
+
   if (config.sauceUser && config.sauceKey) {
-    runWithSauceLabs(config, executeTests);
-    console.log('Using SauceLabs selenium server at ' + config.seleniumUrl);
+    driver = require('./driver/saucelabs');
   } else if (config.seleniumUrl) {
-    runWithSeleniumAddress(config, executeTests);
-    console.log('Using the selenium server at ' + config.seleniumUrl);
+    driver = require('./driver/selenium_grid');
   } else {
-    console.log('Starting selenium standalone server...');
-    runWithSeleniumServer(config, executeTests);
+    driver = require('./driver/selenium_server');
   }
+
+  driver(config, function(error, driverData) {
+    if (error) {
+      console.log(error);
+      shutdown(error);
+    }
+    config.seleniumUrl = driverData.seleniumUrl;
+    lodash.forEach(config.capabilities, function(capabilities) {
+      lodash.merge(capabilities, driverData.capabilities);
+    });
+    executeTests(config, function(error, resultData) {
+      var passed = lodash.every(resultData, 'passed');
+      driverData.end(resultData, function(error) {
+        shutdown(error || !passed);
+      });
+    });
+  });
 };
 
 var detectRunner = function(runner) {
@@ -64,11 +76,7 @@ var detectClient = function(client) {
   }
 }
 
-var executeTests = function(error, config) {
-  if (error) {
-    throw error;
-  }
-
+var executeTests = function(config, callback) {
   var capabilities = config.capabilities;
   var runTestsFunctions = [];
 
@@ -78,21 +86,7 @@ var executeTests = function(error, config) {
     ));
   }
 
-  async.series(runTestsFunctions, function(error, results) {
-    var sauceUpdateFunctions = [];
-    if (config.sauceAccount) {
-      lodash.forEach(results, function(result) {
-        sauceUpdateFunctions.push(
-          config.sauceAccount.updateJob.bind(config.sauceAccount, result.clientId, {passed: result.passed})
-        );
-      });
-      async.series(sauceUpdateFunctions, function(err) {
-        shutdown(config, error, results);
-      })
-    } else {
-      shutdown(config, error, results);
-    }
-  });
+  async.series(runTestsFunctions, callback);
 };
 
 var runTests = function(tests, seleniumUrl, capabilities, client, runner, callback) {
@@ -114,58 +108,8 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, callba
   });
 };
 
-var shutdown = function(config, error, results) {
-  var passed = lodash.every(results, 'passed');
-
-  if (config.seleniumServer) {
-    console.log('Shutting down selenium standalone server');
-    config.seleniumServer.stop();
-  }
-
-  process.exit(passed ? 0 : 1);
-};
-
-var runWithSauceLabs = function(config, callback) {
-  if (config.sauceUser && config.sauceKey) {
-    config.sauceAccount = new SauceLabs({
-      username: config.sauceUser,
-      password: config.sauceKey
-    });
-  }
-
-  lodash.forEach(config.capabilities, function(capabilities) {
-    lodash.extend(capabilities, {
-      username: config.sauceUser,
-      accessKey: config.sauceKey,
-      name: config.sauceName,
-      build: config.sauceBuild,
-      tags: config.sauceTags
-    });
-  });
-  config.seleniumUrl = [
-    'http://',
-    config.sauceUser,
-    ':',
-    config.sauceKey,
-    '@ondemand.saucelabs.com:80/wd/hub'
-  ].join('');
-  callback(null, config);
-};
-
-var runWithSeleniumAddress = function(config, callback) {
-  callback(null, config);
-};
-
-var runWithSeleniumServer = function(config, callback) {
-  config.seleniumArgs = config.seleniumArgs || [];
-  config.seleniumServer = new remote.SeleniumServer(webdrvr.selenium.path, {
-    args: webdrvr.args.concat(config.seleniumArgs)
-  });
-  config.seleniumServer.start().then(function(url) {
-    console.log('Selenium standalone server started at ' + url);
-    config.seleniumUrl = url;
-    callback(null, config);
-  });
+var shutdown = function(error) {
+  process.exit(error ? 0 : 1);
 };
 
 module.exports = run;
