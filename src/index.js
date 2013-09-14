@@ -13,7 +13,7 @@ var defaultConfig = {
   runnerArgs: {},
   driverArgs: {},
   runnerModules: [
-    'jasminewd'
+    'jasmine-selenium-webdriver'
   ],
   runnerGlobals: {},
   sauceUser: undefined,
@@ -75,7 +75,7 @@ var run = function(config) {
 
 var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, runnerModules, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
-  var child = require('child_process').fork(path.join(__dirname, 'run_tests_child.js'));
+  var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
   child.send({
     seleniumUrl: seleniumUrl,
     capabilities: capabilities,

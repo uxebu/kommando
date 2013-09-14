@@ -14,7 +14,7 @@ run({
     path.join(__dirname, 'bar.js')
   ],
   runnerModules: [
-    'mochawd'
+    'mocha-selenium-webdriver'
   ],
   runner: 'mocha'
 });
