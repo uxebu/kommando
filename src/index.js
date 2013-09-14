@@ -8,10 +8,10 @@ var defaultConfig = {
   capabilities: [],
   tests: [],
   driver: 'selenium-server',
+  driverArgs: {},
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
   runnerArgs: {},
-  driverArgs: {},
   runnerModules: [
     'jasmine-selenium-webdriver'
   ],
