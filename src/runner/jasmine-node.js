@@ -2,9 +2,9 @@ var jasmine = require('jasmine-node');
 
 module.exports = {
   setup: function(config) {
-    if (config.kommando.client.type === 'selenium-webdriver') {
-      require('./jasminewd.js');
-    }
+    config.runnerModules.forEach(function(runnerModule) {
+      require(runnerModule);
+    });
     jasmine.getEnv().defaultTimeoutInterval = 10000;
     global.kommando = config.kommando;
 

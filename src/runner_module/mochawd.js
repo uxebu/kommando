@@ -153,7 +153,14 @@ function ignore(predicateFn) {
   }
 }
 
+// just works for mocha's "bdd"-interface at the moment
+global.after = wrapped(global.after);
+global.afterEach = wrapped(global.afterEach);
+global.before = wrapped(global.before);
+global.beforeEach = wrapped(global.beforeEach);
 
-// PUBLIC API
-exports.wrapped = wrapped;
-exports.ignore = ignore;
+global.it = wrapped(global.it);
+global.it.only = global.iit = wrapped(global.it.only);
+global.it.skip = global.xit = wrapped(global.xit);
+
+global.ignore = ignore;

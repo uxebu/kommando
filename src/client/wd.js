@@ -5,7 +5,6 @@ module.exports = function(seleniumUrl) {
   var clients = {};
   
   return {
-    type: 'wd',
     createClient: function(capabilities, callback) {
       var client = wd.remote(url.parse(seleniumUrl))
 

@@ -13,5 +13,6 @@ run({
     path.join(__dirname, 'foo.js')
   ],
   runner: 'mocha',
+  runnerModules: [],
   client: 'wd'
 });

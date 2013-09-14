@@ -12,7 +12,9 @@ var defaultConfig = {
   runner: 'jasmine-node',
   runnerArgs: {},
   driverArgs: {},
-  runnerModules: [],
+  runnerModules: [
+    'jasminewd'
+  ],
   runnerGlobals: {},
   sauceUser: undefined,
   sauceKey: undefined,
@@ -34,11 +36,17 @@ var detectModulePath = function(moduleName, type) {
 };
 
 var run = function(config) {
-  config = lodash.merge({}, defaultConfig, config);
+  config = lodash.extend({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');
   var driver = require(detectModulePath(config.driver, 'driver'));
   var runner = detectModulePath(config.runner, 'runner');
+
+  var runnerModules = [];
+  config.runnerModules.forEach(function(runnerModuleName) {
+    runnerModules.push(detectModulePath(runnerModuleName, 'runner_module'));
+  });
+  config.runnerModules = runnerModules;
 
   var runTestsFunctions = [];
 
@@ -50,7 +58,7 @@ var run = function(config) {
     config.capabilities.forEach(function(capabilities) {
       lodash.merge(capabilities, capabiltiesAddon);
       runTestsFunctions.push(runTests.bind(
-        null, config.tests, seleniumUrl, capabilities, client, runner, config.runnerArgs
+        null, config.tests, seleniumUrl, capabilities, client, runner, config.runnerArgs, config.runnerModules
       ));
     });
 
@@ -65,7 +73,7 @@ var run = function(config) {
   });
 };
 
-var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, callback) {
+var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, runnerModules, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run_tests_child.js'));
   child.send({
@@ -73,7 +81,8 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, runner
     capabilities: capabilities,
     client: client,
     runner: runner,
-    runnerArgs: runner,
+    runnerArgs: runnerArgs,
+    runnerModules: runnerModules,
     tests: tests
   });
   child.on('message', function(msg) {

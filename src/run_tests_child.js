@@ -20,6 +20,8 @@ process.on('message', function(config) {
     });
     runner.setup({
       kommando: kommando,
+      runnerArgs: config.runnerArgs,
+      runnerModules: config.runnerModules,
       tests: config.tests
     });
     runner.run(function(error, passed) {
