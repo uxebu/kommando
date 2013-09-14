@@ -12,7 +12,10 @@ run({
   tests: [
     path.join(__dirname, 'foo-spec.js'),
     path.join(__dirname, 'bar-spec.js')
-  ]
+  ],
+  runnerKommandoGlobals: {
+    foo: 'bar'
+  }
 });
 /*run({
   seleniumUrl: 'http://localhost:9004/wd/hub',

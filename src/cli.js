@@ -40,6 +40,11 @@ var argv = optimist
     desc: 'Used test runner',
     default: 'jasmine-node'
   })
+  .option('runner-global', {
+    alias: 'g',
+    type: 'string',
+    desc: 'Global(s) which will be available within the `kommando` runner global (e.g. baseUrl=http://localhost)'
+  })
   .option('config', {
     alias: 'c',
     type: 'string',
@@ -81,14 +86,34 @@ if (argv.help) {
   process.exit(1);
 }
 
-var browsers = typeof argv.browser === 'string' ? [argv.browser] : argv.browser;
+function convertArgToArray(argv, argName) {
+  return lodash.isArray(argv[argName]) ? argv[argName] : [argv[argName]];
+}
+
+function parseArgAsObject(argv, argName) {
+  var obj = {};
+  var args = convertArgToArray(argv, argName);
+  args.forEach(function(arg) {
+    if (typeof arg !== 'string') {
+      throw new Error('Pass a key-value pair string like "key=value" to "' + argName + '"');
+    }
+    var splitArg = arg.split('=');
+    obj[splitArg[0]] = splitArg[1];
+  });
+  return obj;
+}
+
+var browsers = convertArgToArray(argv, 'browser');
+var runnerKommandoGlobals = parseArgAsObject(argv, 'runner-global');
+var sauceTags = convertArgToArray(argv, 'sauce-tag');
+
 var capabilities = browsers.map(function(browser) {
   return {
     browserName: browser
   };
 });
-var sauceTags = typeof argv['sauce-tag'] === 'string' ? [argv['sauce-tag']] : argv['sauce-tag'];
 
+// read config when it was passed
 var kommandoConfig = argv.config ? require(path.resolve(argv.config)) : {};
 
 // autodetect "driver"
@@ -106,6 +131,7 @@ lodash.merge(kommandoConfig, {
   client: argv['client'],
   driver: argv['driver'],
   runner: argv['runner'],
+  runnerKommandoGlobals: runnerKommandoGlobals,
   capabilities: capabilities,
   driverArgs: {
     sauceUser: argv['sauce-user'],

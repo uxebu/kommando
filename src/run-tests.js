@@ -1,7 +1,14 @@
-var async = require('async');
 var lodash = require('lodash');
 
 process.on('message', function(config) {
+  runTests(config);
+});
+
+process.on('disconnect', function() {
+  process.exit(0);
+});
+
+var runTests = function(config) {
   var runner = require(config.runner);
   var client = require(config.client)(config.seleniumUrl);
 
@@ -13,7 +20,7 @@ process.on('message', function(config) {
       process.exit(1);
       return;
     }
-    var kommando = lodash.extend({}, data, {
+    var kommando = lodash.extend({}, config.runnerKommandoGlobals, data, {
       browser: browser,
       createBrowser: client.create.bind(client),
       capabilities: config.capabilities
@@ -34,8 +41,5 @@ process.on('message', function(config) {
       });
     });
   });
-});
 
-process.on('disconnect', function() {
-  process.exit(0);
-});
+};

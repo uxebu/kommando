@@ -15,7 +15,7 @@ var defaultConfig = {
   runnerModules: [
     'jasmine-selenium-webdriver'
   ],
-  runnerGlobals: {},
+  runnerKommandoGlobals: {},
   sauceUser: undefined,
   sauceKey: undefined,
   sauceName: undefined,
@@ -58,7 +58,9 @@ var run = function(config) {
     config.capabilities.forEach(function(capabilities) {
       lodash.merge(capabilities, capabiltiesAddon);
       runTestsFunctions.push(runTests.bind(
-        null, config.tests, seleniumUrl, capabilities, client, runner, config.runnerArgs, config.runnerModules
+        null, config.tests, seleniumUrl,
+        capabilities, client, runner,
+        config.runnerArgs, config.runnerModules, config.runnerKommandoGlobals
       ));
     });
 
@@ -73,7 +75,7 @@ var run = function(config) {
   });
 };
 
-var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, runnerModules, callback) {
+var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, runnerModules, runnerKommandoGlobals, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
   child.send({
@@ -83,6 +85,7 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, runner
     runner: runner,
     runnerArgs: runnerArgs,
     runnerModules: runnerModules,
+    runnerKommandoGlobals: runnerKommandoGlobals,
     tests: tests
   });
   child.on('message', function(msg) {
