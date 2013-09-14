@@ -67,7 +67,7 @@ var run = function(config) {
 
 var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
-  var child = require('child_process').fork(path.join(__dirname, 'child.js'));
+  var child = require('child_process').fork(path.join(__dirname, 'run_tests_child.js'));
   child.send({
     seleniumUrl: seleniumUrl,
     capabilities: capabilities,
