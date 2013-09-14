@@ -25,7 +25,7 @@ module.exports = function(seleniumUrl) {
       var client;
       var quitFunctions = [];
 
-      var quit = function(client, calback) {
+      var quit = function(client, callback) {
         client.quit().then(function() {
           callback();
         }).then(null, function(error) {
