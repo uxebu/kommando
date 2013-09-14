@@ -1,3 +1,5 @@
+var url = require('url');
+
 var async = require('async');
 var SauceLabs = require('saucelabs');
 
@@ -11,15 +13,17 @@ module.exports = function(config) {
         password: config.sauceKey
       });
 
-      var seleniumUrl = [
-        'http://',
-        config.sauceUser,
-        ':',
-        config.sauceKey,
-        '@ondemand.saucelabs.com:80/wd/hub'
-      ].join('');
+      var seleniumUrl = {
+        protocol: 'http',
+        hostname: 'ondemand.saucelabs.com',
+        port: 80,
+        pathname: '/wd/hub'
+      };
 
-      console.log('Using SauceLabs selenium server at: ' + seleniumUrl);
+      console.log('Using SauceLabs selenium server at: ' + url.format(seleniumUrl));
+
+      seleniumUrl.auth = config.sauceUser + ':' + config.sauceKey;
+      seleniumUrl = url.format(seleniumUrl);
 
       callback(null, seleniumUrl, {
         username: config.sauceUser,
