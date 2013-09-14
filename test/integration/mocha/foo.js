@@ -3,8 +3,8 @@ var expect = require('expect.js');
 describe('foo', function() {
   var searchBox;
   before(function() {
-    kommando.client.get('http://www.google.de');
-    searchBox = kommando.client.findElement(kommando.webdriver.By.name('q'));
+    kommando.browser.get('http://www.google.de');
+    searchBox = kommando.browser.findElement(kommando.webdriver.By.name('q'));
   });
   
   it('bar', function() {

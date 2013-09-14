@@ -1,7 +1,7 @@
 var expect = require('expect.js');
 
 describe('foo', function() {
-  var browser = kommando.client;
+  var browser = kommando.browser;
   var searchBox;
   before(function(done) {
     browser.get('http://www.google.de', function() {

@@ -16,7 +16,7 @@ module.exports = {
     mochaInstance = new Mocha(options);
     mochaInstance.suite.title = config.kommando.capabilities.browserName;
 
-    if (config.kommando.server.type === 'selenium-webdriver') {
+    if (config.kommando.client.type === 'selenium-webdriver') {
       mochaInstance.suite.on('pre-require', function(context, file, mocha) {
         // just works for mocha's "bdd"-interface at the moment
         context.after = mochaWd.wrapped(context.after);

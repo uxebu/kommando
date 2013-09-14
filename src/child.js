@@ -3,9 +3,9 @@ var lodash = require('lodash');
 
 process.on('message', function(config) {
   var runner = require(config.runner);
-  var server = require(config.client)(config.seleniumUrl);
+  var client = require(config.client)(config.seleniumUrl);
 
-  server.createClient(config.capabilities, function(error, id, client, data) {
+  client.createClient(config.capabilities, function(error, id, browser, data) {
     if (error) {
       process.send({
         error: error
@@ -14,8 +14,8 @@ process.on('message', function(config) {
       return;
     }
     var kommando = lodash.extend({}, data, {
+      browser: browser,
       client: client,
-      server: server,
       capabilities: config.capabilities
     });
     runner.setup({
@@ -23,10 +23,10 @@ process.on('message', function(config) {
       tests: config.tests
     });
     runner.run(function(error, passed) {
-      var clients = server.getClients();
+      var clients = client.getClients();
       var clientQuitFunctions = [];
       for (var key in clients) {
-        clientQuitFunctions.push(server.quitClient.bind(server, clients[key]))
+        clientQuitFunctions.push(client.quitClient.bind(client, clients[key]))
       }
       async.series(clientQuitFunctions, function(error) {
         process.send({
