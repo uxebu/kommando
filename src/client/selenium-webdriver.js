@@ -16,7 +16,7 @@ module.exports = function(seleniumUrl) {
       // TODO: handle errors?
       client.getSession().then(function(session) {
         this.clients[session.getId()] = client;
-        callback(null, session.getId(), client, {
+        callback(null, client, {
           webdriver: webdriver
         });
       }.bind(this));

@@ -6,7 +6,7 @@ describe('foo', function() {
   });
   
   it('bar', function() {
-    kommando.client.create(kommando.capabilities, function(error, id, otherBrowser, data) {
+    kommando.createClient(kommando.capabilities, function(error, otherBrowser, data) {
       otherBrowser.get('http://www.google.de').then(function() {
         searchBox.sendKeys('webdriver');
         expect(searchBox.getAttribute('value')).toBe('webdriver');

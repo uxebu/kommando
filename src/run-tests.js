@@ -5,7 +5,7 @@ process.on('message', function(config) {
   var runner = require(config.runner);
   var client = require(config.client)(config.seleniumUrl);
 
-  client.create(config.capabilities, function(error, id, browser, data) {
+  client.create(config.capabilities, function(error, browser, data) {
     if (error) {
       process.send({
         error: error
@@ -15,7 +15,7 @@ process.on('message', function(config) {
     }
     var kommando = lodash.extend({}, data, {
       browser: browser,
-      client: client,
+      createClient: client.create.bind(client),
       capabilities: config.capabilities
     });
     runner.setup({
