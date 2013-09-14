@@ -39,7 +39,7 @@ var run = function(config) {
   config = lodash.extend({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');
-  var driver = require(detectModulePath(config.driver, 'driver'));
+  var driver = require(detectModulePath(config.driver, 'driver'))(config.driverArgs);
   var runner = detectModulePath(config.runner, 'runner');
 
   var runnerModules = [];
@@ -50,7 +50,7 @@ var run = function(config) {
 
   var runTestsFunctions = [];
 
-  driver(config.driverArgs, function(error, seleniumUrl, capabiltiesAddon, endDriver) {
+  driver.create(function(error, seleniumUrl, capabiltiesAddon) {
     if (error) {
       console.log(error);
       process.exit(error ? 0 : 1);
@@ -65,7 +65,7 @@ var run = function(config) {
     // Execute tests per capability / browser one after another
     async.series(runTestsFunctions, function(error, results) {
       var passed = lodash.every(results, 'passed');
-      endDriver(results, function(error) {
+      driver.end(results, function(error) {
         process.exit(!error && passed ? 0 : 1);
       });
     });

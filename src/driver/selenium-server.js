@@ -1,24 +1,27 @@
 var remote = require('selenium-webdriver/remote');
 var webdrvr = require('webdrvr');
 
-module.exports = function(config, callback) {
+module.exports = function(config) {
 
-  var seleniumUrl;
-  var seleniumArgs = webdrvr.args.concat(config.seleniumArgs || []);
-  var seleniumServer = new remote.SeleniumServer(webdrvr.selenium.path, {
-    args: seleniumArgs
-  });
-
-  console.log('Starting selenium server ...');
-  seleniumServer.start().then(function(url) {
-    console.log('Selenium server started at: ' + url);
-    seleniumUrl = url;
-
-    callback(null, url, {}, function endSeleniumServer(resultData, callback) {
-      console.log('Shutting down selenium server at: ' + seleniumUrl);
-      seleniumServer.stop();
+  return {
+    _seleniumServer: null,
+    _seleniumUrl: '',
+    create: function(callback) {
+      console.log('Starting selenium server ...');
+      this._seleniumServer = new remote.SeleniumServer(webdrvr.selenium.path, {
+        args: webdrvr.args.concat(config.seleniumArgs || [])
+      })
+      this._seleniumServer.start().then(function(url) {
+        console.log('Selenium server started at: ' + url);
+        this._seleniumUrl = url;
+        callback(null, url, {});
+      }.bind(this));
+    },
+    end: function(results, callback) {
+      console.log('Shutting down selenium server at: ' + this._seleniumUrl);
+      this._seleniumServer.stop();
       callback(null);
-    });
-  });
+    }
+  };
 
 };

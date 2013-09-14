@@ -2,8 +2,6 @@ var async = require('async');
 var webdriver = require('selenium-webdriver');
 
 module.exports = function(seleniumUrl) {
-  var clients = {};
-
   return {
     clients: {},
     create: function(capabilities, callback) {

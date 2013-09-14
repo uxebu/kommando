@@ -1,9 +1,13 @@
-module.exports = function(config, callback) {
+module.exports = function(config) {
 
-  console.log('Using the selenium server at ' + config.seleniumUrl);
-
-  callback(null, config.seleniumUrl, {}, function endSeleniumGrid(resultData, callback) {
-    callback(null);
-  });
+  return {
+    create: function(callback) {
+      console.log('Using the selenium server at ' + config.seleniumUrl);
+      callback(null, config.seleniumUrl, {});
+    },
+    end: function(results, callback) {
+      callback(null);
+    }
+  };
 
 };
