@@ -18,13 +18,12 @@ process.on('message', function(config) {
       createClient: client.create.bind(client),
       capabilities: config.capabilities
     });
-    runner.setup({
+    runner({
       kommando: kommando,
       runnerArgs: config.runnerArgs,
       runnerModules: config.runnerModules,
       tests: config.tests
-    });
-    runner.run(function(error, passed) {
+    }).run(function(error, passed) {
       var clientIds = Object.keys(client.clients);
       client.end(function(error) {
         process.send({
