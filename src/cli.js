@@ -107,12 +107,14 @@ lodash.merge(kommandoConfig, {
   driver: argv['driver'],
   runner: argv['runner'],
   capabilities: capabilities,
-  sauceUser: argv['sauce-user'],
-  sauceKey: argv['sauce-key'],
-  sauceName: argv['sauce-name'],
-  sauceBuild: argv['sauce-build'],
-  sauceTags: sauceTags,
-  seleniumUrl: argv['selenium-url'],
+  driverArgs: {
+    sauceUser: argv['sauce-user'],
+    sauceKey: argv['sauce-key'],
+    sauceName: argv['sauce-name'],
+    sauceBuild: argv['sauce-build'],
+    sauceTags: sauceTags,
+    seleniumUrl: argv['selenium-url']
+  },
   tests: argv._
 });
 

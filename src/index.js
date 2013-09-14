@@ -11,8 +11,9 @@ var defaultConfig = {
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
   runnerArgs: {},
+  driverArgs: {},
   runnerModules: [],
-  runnerGlobals: [],
+  runnerGlobals: {},
   sauceUser: undefined,
   sauceKey: undefined,
   sauceName: undefined,
@@ -41,25 +42,25 @@ var run = function(config) {
 
   var runTestsFunctions = [];
 
-  driver(config, function(error, driverData) {
+  driver(config.driverArgs, function(error, seleniumUrl, capabiltiesAddon, endDriver) {
     if (error) {
       console.log(error);
       process.exit(error ? 0 : 1);
     }
     lodash.forEach(config.capabilities, function(capabilities) {
-      lodash.merge(capabilities, driverData.capabilities);
+      lodash.merge(capabilities, capabiltiesAddon);
     });
 
     // Execute tests per capability / browser
     lodash.forEach(config.capabilities, function(capabilities) {
       runTestsFunctions.push(runTests.bind(
-        null, config.tests, driverData.seleniumUrl, capabilities, client, runner
+        null, config.tests, seleniumUrl, capabilities, client, runner, config.runnerArgs
       ));
     });
-    
+
     async.series(runTestsFunctions, function(error, resultData) {
       var passed = lodash.every(resultData, 'passed');
-      driverData.end(resultData, function(error) {
+      endDriver(resultData, function(error) {
         process.exit(!error && passed ? 0 : 1);
       });
     });
@@ -67,7 +68,7 @@ var run = function(config) {
   });
 };
 
-var runTests = function(tests, seleniumUrl, capabilities, client, runner, callback) {
+var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'child.js'));
   child.send({
@@ -75,6 +76,7 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, callba
     capabilities: capabilities,
     client: client,
     runner: runner,
+    runnerArgs: runner,
     tests: tests
   });
   child.on('message', function(msg) {

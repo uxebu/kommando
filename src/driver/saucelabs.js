@@ -17,27 +17,23 @@ module.exports = function(config, callback) {
 
   console.log('Using SauceLabs selenium server at: ' + seleniumUrl);
 
-  callback(null, {
-    seleniumUrl: seleniumUrl,
-    capabilities: {
-      username: config.sauceUser,
-      accessKey: config.sauceKey,
-      name: config.sauceName,
-      build: config.sauceBuild,
-      tags: config.sauceTags
-    },
-    end: function(resultData, callback) {
-      var sauceUpdateFunctions = [];
-      lodash.forEach(resultData, function(result) {
-        sauceUpdateFunctions.push(
-          sauceAccount.updateJob.bind(
-            sauceAccount, result.clientId, {passed: result.passed}
-          )
-        );
-      });
-      async.series(sauceUpdateFunctions, function(error) {
-        callback(error);
-      });
-    }
+  callback(null, seleniumUrl, {
+    username: config.sauceUser,
+    accessKey: config.sauceKey,
+    name: config.sauceName,
+    build: config.sauceBuild,
+    tags: config.sauceTags
+  }, function endSauceLabs(resultData, callback) {
+    var sauceUpdateFunctions = [];
+    lodash.forEach(resultData, function(result) {
+      sauceUpdateFunctions.push(
+        sauceAccount.updateJob.bind(
+          sauceAccount, result.clientId, {passed: result.passed}
+        )
+      );
+    });
+    async.series(sauceUpdateFunctions, function(error) {
+      callback(error);
+    });
   })
 };

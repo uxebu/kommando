@@ -9,18 +9,15 @@ module.exports = function(config, callback) {
     args: seleniumArgs
   });
 
+  console.log('Starting selenium server ...');
   seleniumServer.start().then(function(url) {
     console.log('Selenium server started at: ' + url);
     seleniumUrl = url;
 
-    callback(null, {
-      seleniumUrl: url,
-      capabilities: {},
-      end: function(resultData, callback) {
-        console.log('Shutting down selenium server at: ' + seleniumUrl);
-        seleniumServer.stop();
-        callback(null);
-      }
+    callback(null, url, {}, function endSeleniumServer(resultData, callback) {
+      console.log('Shutting down selenium server at: ' + seleniumUrl);
+      seleniumServer.stop();
+      callback(null);
     });
   });
 
