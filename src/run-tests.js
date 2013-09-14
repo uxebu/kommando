@@ -5,7 +5,7 @@ process.on('message', function(config) {
   var runner = require(config.runner);
   var client = require(config.client)(config.seleniumUrl);
 
-  client.createClient(config.capabilities, function(error, id, browser, data) {
+  client.create(config.capabilities, function(error, id, browser, data) {
     if (error) {
       process.send({
         error: error
@@ -25,16 +25,12 @@ process.on('message', function(config) {
       tests: config.tests
     });
     runner.run(function(error, passed) {
-      var clients = client.getClients();
-      var clientQuitFunctions = [];
-      for (var key in clients) {
-        clientQuitFunctions.push(client.quitClient.bind(client, clients[key]))
-      }
-      async.series(clientQuitFunctions, function(error) {
+      var clientIds = Object.keys(client.clients);
+      client.end(function(error) {
         process.send({
           error: error,
           passed: passed,
-          clientId: id
+          clientIds: clientIds
         });
       });
     });

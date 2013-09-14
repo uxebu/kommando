@@ -25,11 +25,13 @@ module.exports = function(config, callback) {
   }, function endSauceLabs(results, callback) {
     var sauceUpdateFunctions = [];
     results.forEach(function(result) {
-      sauceUpdateFunctions.push(
-        sauceAccount.updateJob.bind(
-          sauceAccount, result.clientId, {passed: result.passed}
-        )
-      );
+      result.clientIds.forEach(function(clientId) {
+        sauceUpdateFunctions.push(
+          sauceAccount.updateJob.bind(
+            sauceAccount, clientId, {passed: result.passed}
+          )
+        );
+      });
     });
     async.series(sauceUpdateFunctions, function(error) {
       callback(error);

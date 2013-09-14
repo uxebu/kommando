@@ -63,9 +63,9 @@ var run = function(config) {
     });
 
     // Execute tests per capability / browser one after another
-    async.series(runTestsFunctions, function(error, resultData) {
-      var passed = lodash.every(resultData, 'passed');
-      endDriver(resultData, function(error) {
+    async.series(runTestsFunctions, function(error, results) {
+      var passed = lodash.every(results, 'passed');
+      endDriver(results, function(error) {
         process.exit(!error && passed ? 0 : 1);
       });
     });
@@ -89,7 +89,7 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, runner
     child.disconnect();
     callback(msg.error, {
       passed: msg.passed,
-      clientId: msg.clientId
+      clientIds: msg.clientIds
     });
   });
 };

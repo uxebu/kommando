@@ -6,9 +6,11 @@ describe('foo', function() {
   });
   
   it('bar', function() {
-    kommando.client.createClient(kommando.capabilities, function(error, id, otherBrowser, data) {
-      searchBox.sendKeys('webdriver');
-      expect(searchBox.getAttribute('value')).toBe('webdriver');
+    kommando.client.create(kommando.capabilities, function(error, id, otherBrowser, data) {
+      otherBrowser.get('http://www.google.de').then(function() {
+        searchBox.sendKeys('webdriver');
+        expect(searchBox.getAttribute('value')).toBe('webdriver');
+      });
     });
   });
 });

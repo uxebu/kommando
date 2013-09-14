@@ -1,24 +1,28 @@
+var async = require('async');
 var url = require('url');
 var wd = require('wd');
 
 module.exports = function(seleniumUrl) {
-  var clients = {};
-  
   return {
-    createClient: function(capabilities, callback) {
-      var client = wd.remote(url.parse(seleniumUrl))
+    clients: {},
+    create: function(capabilities, callback) {
+      var client = wd.remote(url.parse(seleniumUrl));
 
       client.init(capabilities, function(error, sessionId) {
-        clients[sessionId] = client;
+        this.clients[sessionId] = client;
         callback(error, sessionId, client, {});
-      });
+      }.bind(this));
     },
-    quitClient: function(client, callback) {
-      delete clients[client.sessionID];
-      client.quit(callback);
-    },
-    getClients: function() {
-      return clients;
+    end: function(callback) {
+      var client;
+      var quitFunctions = [];
+
+      for (var id in this.clients) {
+        client = this.clients[id];
+        delete this.clients[id];
+        quitFunctions.push(client.quit.bind(client));
+      }
+      async.series(quitFunctions, callback);
     }
   }
 };
