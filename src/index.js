@@ -47,17 +47,14 @@ var run = function(config) {
       console.log(error);
       process.exit(error ? 0 : 1);
     }
-    lodash.forEach(config.capabilities, function(capabilities) {
+    config.capabilities.forEach(function(capabilities) {
       lodash.merge(capabilities, capabiltiesAddon);
-    });
-
-    // Execute tests per capability / browser
-    lodash.forEach(config.capabilities, function(capabilities) {
       runTestsFunctions.push(runTests.bind(
         null, config.tests, seleniumUrl, capabilities, client, runner, config.runnerArgs
       ));
     });
 
+    // Execute tests per capability / browser one after another
     async.series(runTestsFunctions, function(error, resultData) {
       var passed = lodash.every(resultData, 'passed');
       endDriver(resultData, function(error) {

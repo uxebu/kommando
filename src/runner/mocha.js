@@ -32,9 +32,9 @@ module.exports = {
       });
     }
 
-    for (var i = 0, l = config.tests.length; i < l; i++) {
-      mochaInstance.addFile(config.tests[i]);
-    }
+    config.tests.forEach(function(test) {
+      mochaInstance.addFile(test);
+    });
   },
   run: function(callback) {
     mochaInstance.run(function(errCount) {

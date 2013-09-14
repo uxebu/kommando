@@ -9,9 +9,9 @@ module.exports = {
     global.kommando = config.kommando;
 
     describe(config.kommando.capabilities.browserName, function() {
-      for (var i = 0, l = config.tests.length; i < l; i++) {
-        require(config.tests[i]);
-      }
+      config.tests.forEach(function(test) {
+        require(test);
+      });
     });
   },
   run: function(callback) {

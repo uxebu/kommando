@@ -1,5 +1,4 @@
 var async = require('async');
-var lodash = require('lodash');
 var SauceLabs = require('saucelabs');
 
 module.exports = function(config, callback) {
@@ -23,9 +22,9 @@ module.exports = function(config, callback) {
     name: config.sauceName,
     build: config.sauceBuild,
     tags: config.sauceTags
-  }, function endSauceLabs(resultData, callback) {
+  }, function endSauceLabs(results, callback) {
     var sauceUpdateFunctions = [];
-    lodash.forEach(resultData, function(result) {
+    results.forEach(function(result) {
       sauceUpdateFunctions.push(
         sauceAccount.updateJob.bind(
           sauceAccount, result.clientId, {passed: result.passed}
