@@ -15,7 +15,7 @@ process.on('message', function(config) {
     }
     var kommando = lodash.extend({}, data, {
       browser: browser,
-      createClient: client.create.bind(client),
+      createBrowser: client.create.bind(client),
       capabilities: config.capabilities
     });
     runner({
