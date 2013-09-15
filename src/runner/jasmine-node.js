@@ -1,4 +1,5 @@
 var jasmine = require('jasmine-node');
+var lodash = require('lodash');
 
 module.exports = function(config) {
   config.runnerModules.forEach(function(runnerModule) {
@@ -22,26 +23,31 @@ module.exports = function(config) {
         callback(null, passed);
       };
 
-      var options = {
-        match: '.',
-        matchall: false,
-        specNameMatcher: 'spec',
-        extensions: 'js',
-        regExpSpec: /.spec\.(js)$/i,
-        specFolders: [],
-        onComplete: onComplete,
+      var defaultJasmineOptions = {
         isVerbose: false,
         showColors: true,
         teamcity: false,
-        coffee: false,
-        useRequireJs: false,
         junitreport: {
-          report: true,
+          report: false,
           savePath : "./reports/",
           useDotNotation: true,
           consolidate: true
         }
       };
+
+      var nonChangeableJasmineOptions = {
+        // do not let jasmine-node load the specs!
+        specNameMatcher: 'do-not-load-specs',
+        specFolders: [],
+        onComplete: onComplete
+      };
+
+      var options = lodash.merge(
+        {}, defaultJasmineOptions, config.runnerArgs, nonChangeableJasmineOptions
+      );
+
+      console.log(options);
+
       jasmine.executeSpecsInFolder(options);
     }
   };

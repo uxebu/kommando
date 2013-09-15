@@ -1,15 +1,17 @@
+var lodash = require('lodash');
 var Mocha = require('mocha');
 
 module.exports = function(config) {
   var mochaInstance;
 
-  var options = {
+  var options = lodash.merge({
     globals: ['should', 'kommando'],
     timeout: 10000,
     ignoreLeaks: false,
     ui: 'bdd',
     reporter: 'spec'
-  };
+  }, config.runnerArgs);
+
   global.kommando = config.kommando;
   mochaInstance = new Mocha(options);
   mochaInstance.suite.title = config.kommando.capabilities.browserName;
