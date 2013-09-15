@@ -27,10 +27,10 @@ var defaultConfig = {
 
 var detectModulePath = function(moduleName, type) {
   var modulePath = path.join(__dirname, type, moduleName + '.js');
-  if (fs.existsSync(moduleName)) {
-    return moduleName;
-  } else if (fs.existsSync(modulePath)) {
+  if (fs.existsSync(modulePath)) {
     return modulePath;
+  } else if (fs.existsSync(moduleName)) {
+    return moduleName;
   } else {
     throw new Error('The passed "' + type + '" module "' + moduleName + '" was not found.')
   }
@@ -76,7 +76,9 @@ var run = function(config, callback) {
     // Execute tests per capability / browser one after another
     async.series(runTestsFunctions, function(error, results) {
       driver.end(results, function(endError) {
-        callback(error && endError, results);
+        if (typeof callback === 'function') {
+          callback(error && endError, results);
+        }
       });
     });
 
