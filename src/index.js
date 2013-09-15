@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var async = require('async');
+var glob = require('glob');
 var lodash = require('lodash');
 
 var defaultConfig = {
@@ -48,6 +49,15 @@ var run = function(config) {
   });
   config.runnerModules = runnerModules;
 
+  var tests = [];
+  config.tests.forEach(function(test) {
+    tests = tests.concat(glob.sync(test));
+  });
+
+  if (tests.length === 0) {
+    throw new Error('No test files found.')
+  }
+
   var runTestsFunctions = [];
 
   driver.create(function(error, seleniumUrl, capabiltiesAddon) {
@@ -58,7 +68,7 @@ var run = function(config) {
     config.capabilities.forEach(function(capabilities) {
       lodash.merge(capabilities, capabiltiesAddon);
       runTestsFunctions.push(runTests.bind(
-        null, config.tests, seleniumUrl,
+        null, tests, seleniumUrl,
         capabilities, client, runner,
         config.runnerArgs, config.runnerModules, config.runnerKommandoGlobals
       ));
