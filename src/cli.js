@@ -7,7 +7,7 @@ var kommandoRunner = require('./index.js');
 var packageJson = require(path.join(__dirname, '..', 'package.json'));
 
 var argv = optimist
-  .usage('Usage: \n  $0 [options] TESTFILES')
+  .usage('Usage: \n  $0 [options] TESTFILE(S) # allows globbing')
   .wrap(80)
   .option('version', {
     alias: 'v',
@@ -43,7 +43,7 @@ var argv = optimist
   .option('runner-module', {
     alias: 'm',
     type: 'string',
-    desc: 'Runner module(s) that should be loaded before tests get added'
+    desc: 'Runner module(s) that are loaded in runner context before tests get added'
   })
   .option('runner-arg-*', {
     type: 'string',
@@ -51,7 +51,7 @@ var argv = optimist
   })
   .option('runner-global-*', {
     type: 'string',
-    desc: 'Global(s) which will be available within the `kommando` runner global (e.g. --runner-global-baseUrl http://localhost)'
+    desc: 'Global(s) which will be available within the `kommando` runner global (e.g. --runner-global-baseUrl http://localhost or --runner-global-env dev)'
   })
   .option('config', {
     alias: 'c',
