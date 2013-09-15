@@ -46,8 +46,6 @@ module.exports = function(config) {
         {}, defaultJasmineOptions, config.runnerArgs, nonChangeableJasmineOptions
       );
 
-      console.log(options);
-
       jasmine.executeSpecsInFolder(options);
     }
   };
