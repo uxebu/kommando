@@ -45,9 +45,8 @@ var run = function(config) {
 
   var runnerModules = [];
   config.runnerModules.forEach(function(runnerModuleName) {
-    runnerModules.push(detectModulePath(runnerModuleName, 'runner_module'));
+    runnerModules.push(detectModulePath(runnerModuleName, 'runner-module'));
   });
-  config.runnerModules = runnerModules;
 
   var tests = [];
   config.tests.forEach(function(test) {
@@ -70,7 +69,7 @@ var run = function(config) {
       runTestsFunctions.push(runTests.bind(
         null, tests, seleniumUrl,
         capabilities, client, runner,
-        config.runnerArgs, config.runnerModules, config.runnerKommandoGlobals
+        config.runnerArgs, runnerModules, config.runnerKommandoGlobals
       ));
     });
 

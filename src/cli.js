@@ -43,7 +43,8 @@ var argv = optimist
   .option('runner-module', {
     alias: 'm',
     type: 'string',
-    desc: 'Runner module(s) that are loaded in runner context before tests get added'
+    desc: 'Runner module(s) that are loaded in runner context before tests get added',
+    default: 'jasmine-selenium-webdriver'
   })
   .option('runner-arg-*', {
     type: 'string',
