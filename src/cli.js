@@ -40,6 +40,11 @@ var argv = optimist
     desc: 'Used test runner',
     default: 'jasmine-node'
   })
+  .option('runner-module', {
+    alias: 'm',
+    type: 'string',
+    desc: 'Runner module(s) that should be loaded before tests get added'
+  })
   .option('runner-arg-*', {
     type: 'string',
     desc: 'Argument(s) for a specific test runner. Overriding default arguments of runner. (e.g. --runner-arg-isVerbose or --runner-arg-ui tdd)'
@@ -113,6 +118,7 @@ function collectArgsWithPrefix(argv, argPrefix) {
 var browsers = convertArgToArray(argv, 'browser');
 var runnerArgs = collectArgsWithPrefix(argv, 'runner-arg-');
 var runnerKommandoGlobals = collectArgsWithPrefix(argv, 'runner-global-');
+var runnerModules = convertArgToArray(argv, 'runner-module');
 var sauceTags = convertArgToArray(argv, 'sauce-tag');
 
 var capabilities = browsers.map(function(browser) {
@@ -150,6 +156,7 @@ lodash.merge(kommandoConfig, {
   runner: argv['runner'],
   runnerArgs: runnerArgs,
   runnerKommandoGlobals: runnerKommandoGlobals,
+  runnerModules: runnerModules,
   capabilities: capabilities,
   tests: argv._
 });
