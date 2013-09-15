@@ -1,6 +1,8 @@
 var path = require('path');
 
+var lodash = require('lodash');
 var run = require('../../src/index.js');
+
 var capabilities = [{browserName: 'phantomjs'}];
 
 var configSeleniumWebdriverJasmine = {
@@ -34,10 +36,19 @@ var configWdMocha = {
   client: 'wd'
 };
 
-run(configSeleniumWebdriverJasmine, function(error, passed) {
-  run(configSeleniumWebdriverMocha, function(error, passed) {
-    run(configWdMocha, function(error, passed) {
-      console.log('eeeeend');
+run(configSeleniumWebdriverJasmine, function(error, results) {
+  handleErrorCallback(error, results);
+  run(configSeleniumWebdriverMocha, function(error, results) {
+    handleErrorCallback(error, results);
+    run(configWdMocha, function(error, results) {
+      process.exit(0);
     });
   });
 });
+
+function handleErrorCallback(error, results) {
+  var passed = lodash.every(results, 'passed');
+  if (error || !passed) {
+    process.exit(1);
+  }
+}
