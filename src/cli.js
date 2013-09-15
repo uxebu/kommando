@@ -175,4 +175,7 @@ kommandoConfig.tests = kommandoConfig.tests.map(function(test) {
   return path.resolve(pathFrom, test);
 });
 
-kommandoRunner(kommandoConfig);
+kommandoRunner(kommandoConfig, function(error, results) {
+  var passed = lodash.every(results, 'passed');
+  process.exit(!error && passed ? 0 : 1);
+});

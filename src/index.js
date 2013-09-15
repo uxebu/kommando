@@ -36,7 +36,7 @@ var detectModulePath = function(moduleName, type) {
   }
 };
 
-var run = function(config) {
+var run = function(config, callback) {
   config = lodash.extend({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');
@@ -75,9 +75,8 @@ var run = function(config) {
 
     // Execute tests per capability / browser one after another
     async.series(runTestsFunctions, function(error, results) {
-      var passed = lodash.every(results, 'passed');
-      driver.end(results, function(error) {
-        process.exit(!error && passed ? 0 : 1);
+      driver.end(results, function(endError) {
+        callback(error && endError, results);
       });
     });
 
