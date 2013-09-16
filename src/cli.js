@@ -116,24 +116,16 @@ function collectArgsWithPrefix(argv, argPrefix) {
   return obj;
 }
 
-var browsers = convertArgToArray(argv, 'browser');
 var runnerArgs = collectArgsWithPrefix(argv, 'runner-arg-');
 var runnerKommandoGlobals = collectArgsWithPrefix(argv, 'runner-global-');
 var runnerModules = convertArgToArray(argv, 'runner-module');
 var sauceTags = convertArgToArray(argv, 'sauce-tag');
 
-var capabilities = browsers.map(function(browser) {
-  return {
-    browserName: browser
-  };
-});
-
-
 // read config when it was passed
 var kommandoConfig = argv.config ? require(path.resolve(argv.config)) : {};
 
 // autodetect "driver"
-if (!argv.driver) {
+if (!argv.driver && !kommandoConfig.driver) {
   if (argv['sauce-user'] && argv['sauce-key']) {
     argv.driver = 'saucelabs';
   } else if (argv['selenium-url']) {
@@ -141,6 +133,17 @@ if (!argv.driver) {
   } else {
     argv.driver = 'selenium-server';
   }
+}
+
+var capabilities = kommandoConfig.capabilities;
+
+if (!capabilities) {
+  var browsers = convertArgToArray(argv, 'browser');
+  capabilities = browsers.map(function(browser) {
+    return {
+      browserName: browser
+    };
+  });
 }
 
 lodash.merge(kommandoConfig, {
