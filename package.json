@@ -1,6 +1,6 @@
 {
   "name": "kommando",
-  "description": "Webdriver wrapper for various test runners",
+  "description": "A functional / acceptance test launcher (using Webdriver)",
   "version": "0.0.3",
   "homepage": "https://github.com/uxebu/kommando",
   "repository": {
