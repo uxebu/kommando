@@ -2,11 +2,11 @@ var jasmine = require('jasmine-node');
 var lodash = require('lodash');
 
 module.exports = function(config) {
+  global.kommando = config.kommando;
   config.runnerModules.forEach(function(runnerModule) {
     require(runnerModule);
   });
   jasmine.getEnv().defaultTimeoutInterval = 10000;
-  global.kommando = config.kommando;
 
   describe(config.kommando.capabilities.browserName, function() {
     config.tests.forEach(function(test) {
