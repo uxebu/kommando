@@ -11,13 +11,15 @@ module.exports = function(seleniumUrl) {
         .build();
 
       client.manage().timeouts().setScriptTimeout(100000);
-      // TODO: handle errors?
+
       client.getSession().then(function(session) {
         this.clients[session.getId()] = client;
         callback(null, client, {
           webdriver: webdriver
         });
-      }.bind(this));
+      }.bind(this)).then(null, function(error) {
+        callback(error);
+      });
     },
     end: function(callback) {
       var client;

@@ -75,6 +75,9 @@ var run = function(config, callback) {
 
     // Execute tests per capability / browser one after another
     async.series(runTestsFunctions, function(error, results) {
+      if (error) {
+        console.log(error);
+      }
       driver.end(results, function(endError) {
         if (typeof callback === 'function') {
           callback(error && endError, results);
