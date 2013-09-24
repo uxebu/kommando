@@ -6,7 +6,7 @@ module.exports = function(config) {
   config.runnerModules.forEach(function(runnerModule) {
     require(runnerModule);
   });
-  jasmine.getEnv().defaultTimeoutInterval = 10000;
+  jasmine.getEnv().defaultTimeoutInterval = 100000;
 
   describe(config.kommando.capabilities.browserName, function() {
     config.tests.forEach(function(test) {
