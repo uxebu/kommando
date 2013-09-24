@@ -1,5 +1,4 @@
 var spawn = require('child_process').spawn;
-var url = require('url');
 
 var freeport = require('freeport');
 
