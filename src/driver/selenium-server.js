@@ -6,9 +6,10 @@ var webdrvr = require('webdrvr');
 
 module.exports = function(options) {
 
+  var launcher = null;
+  var seleniumUrl = '';
+
   return {
-    _launcher: null,
-    _seleniumUrl: '',
     start: function(callback) {
       console.log('Starting Selenium server ...');
 
@@ -23,17 +24,17 @@ module.exports = function(options) {
           port: port,
           path: '/wd/hub'
         }
-        this._launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
+        launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
           console.log('Selenium server started at: ' + url);
-          this._seleniumUrl = url;
+          seleniumUrl = url;
           callback(error, url, {});
         }.bind(this));
 
       }.bind(this));
     },
     stop: function(results, callback) {
-      console.log('Shutting down Selenium server at: ' + this._seleniumUrl);
-      this._launcher.stop(callback);
+      console.log('Shutting down Selenium server at: ' + seleniumUrl);
+      launcher.stop(callback);
     }
   };
 

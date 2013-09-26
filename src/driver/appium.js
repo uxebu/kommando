@@ -5,9 +5,10 @@ var freeport = require('freeport');
 
 module.exports = function(options) {
 
+  var launcher = null;
+  var seleniumUrl = '';
+
   return {
-    _launcher: null,
-    _seleniumUrl: '',
     start: function(callback) {
       console.log('Starting Appium server ...');
 
@@ -20,18 +21,18 @@ module.exports = function(options) {
           port: port,
           path: '/wd/hub'
         }
-        this._launcher = driverLauncher(options.appiumPath || 'appium', driverLauncherOptions)
+        launcher = driverLauncher(options.appiumPath || 'appium', driverLauncherOptions)
           .start(function(error, url) {
             console.log('Appium server started at: ' + url);
-            this._seleniumUrl = url;
+            seleniumUrl = url;
             callback(error, url, {});
           }.bind(this));
 
       }.bind(this));
     },
     stop: function(results, callback) {
-      console.log('Shutting down Appium server at: ' + this._seleniumUrl);
-      this._launcher.stop(callback);
+      console.log('Shutting down Appium server at: ' + seleniumUrl);
+      launcher.stop(callback);
     }
   };
 

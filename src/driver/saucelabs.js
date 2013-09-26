@@ -4,11 +4,12 @@ var async = require('async');
 var SauceLabs = require('saucelabs');
 
 module.exports = function(options) {
-  
+
+  var sauceAccount = null;
+
   return {
-    _sauceAccount: null,
     start: function(callback) {
-      this._sauceAccount = new SauceLabs({
+      sauceAccount = new SauceLabs({
         username: options.sauceUser,
         password: options.sauceKey
       });
@@ -35,7 +36,6 @@ module.exports = function(options) {
     },
     stop: function(results, callback) {
       var sauceUpdateFunctions = [];
-      var sauceAccount = this._sauceAccount;
       results.forEach(function(result) {
         result.clientIds.forEach(function(clientId) {
           sauceUpdateFunctions.push(
