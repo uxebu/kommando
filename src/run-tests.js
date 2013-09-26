@@ -27,7 +27,7 @@ var runTests = function(config) {
     });
     runner({
       kommando: kommando,
-      runnerArgs: config.runnerArgs,
+      runnerOptions: config.runnerOptions,
       runnerModules: config.runnerModules,
       tests: config.tests
     }).run(function(error, passed) {

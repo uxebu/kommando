@@ -9,20 +9,27 @@ var defaultConfig = {
   capabilities: [],
   tests: [],
   driver: 'selenium-server',
-  driverArgs: {},
+  driverOptions: {
+    args: [],
+    port: 0,
+    hostname: '',
+    stdio: 'inherit',
+    sauceUser: undefined,
+    sauceKey: undefined,
+    sauceName: undefined,
+    sauceBuild: undefined,
+    sauceTags: undefined,
+    seleniumUrl: undefined,
+    javaPath: '',
+    appiumPath: ''
+  },
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
-  runnerArgs: {},
+  runnerOptions: {},
   runnerModules: [
     'jasmine-selenium-webdriver'
   ],
-  runnerKommandoGlobals: {},
-  sauceUser: undefined,
-  sauceKey: undefined,
-  sauceName: undefined,
-  sauceBuild: undefined,
-  sauceTags: undefined,
-  seleniumUrl: undefined
+  runnerKommandoGlobals: {}
 };
 
 var detectModulePath = function(moduleName, type) {
@@ -40,7 +47,7 @@ var run = function(config, callback) {
   config = lodash.extend({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');
-  var driver = require(detectModulePath(config.driver, 'driver'))(config.driverArgs);
+  var driver = require(detectModulePath(config.driver, 'driver'))(config.driverOptions);
   var runner = detectModulePath(config.runner, 'runner');
 
   var runnerModules = [];
@@ -73,7 +80,7 @@ var run = function(config, callback) {
       runTestsFunctions.push(runTests.bind(
         null, tests, seleniumUrl,
         capabilities, client, runner,
-        config.runnerArgs, runnerModules, config.runnerKommandoGlobals
+        config.runnerOptions, runnerModules, config.runnerKommandoGlobals
       ));
     });
 
@@ -92,7 +99,7 @@ var run = function(config, callback) {
   });
 };
 
-var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerArgs, runnerModules, runnerKommandoGlobals, callback) {
+var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerOptions, runnerModules, runnerKommandoGlobals, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
   child.send({
@@ -100,7 +107,7 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, runner
     capabilities: capabilities,
     client: client,
     runner: runner,
-    runnerArgs: runnerArgs,
+    runnerOptions: runnerOptions,
     runnerModules: runnerModules,
     runnerKommandoGlobals: runnerKommandoGlobals,
     tests: tests

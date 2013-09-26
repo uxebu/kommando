@@ -43,7 +43,7 @@ module.exports = function(config) {
       };
 
       var options = lodash.merge(
-        {}, defaultJasmineOptions, config.runnerArgs, nonChangeableJasmineOptions
+        {}, defaultJasmineOptions, config.runnerOptions, nonChangeableJasmineOptions
       );
 
       jasmine.executeSpecsInFolder(options);

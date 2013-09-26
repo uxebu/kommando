@@ -46,9 +46,9 @@ var argv = optimist
     desc: 'Runner module(s) that are loaded in runner context before tests get added',
     default: 'jasmine-selenium-webdriver'
   })
-  .option('runner-arg-*', {
+  .option('runner-option-*', {
     type: 'string',
-    desc: 'Argument(s) for a specific test runner. Overriding default arguments of runner. (e.g. --runner-arg-isVerbose or --runner-arg-ui tdd)'
+    desc: 'Option(s) for a specific test runner. Overriding default options of runner. (e.g. --runner-option-isVerbose or --runner-option-ui tdd)'
   })
   .option('runner-global-*', {
     type: 'string',
@@ -116,7 +116,7 @@ function collectArgsWithPrefix(argv, argPrefix) {
   return obj;
 }
 
-var runnerArgs = collectArgsWithPrefix(argv, 'runner-arg-');
+var runnerOptions = collectArgsWithPrefix(argv, 'runner-option-');
 var runnerKommandoGlobals = collectArgsWithPrefix(argv, 'runner-global-');
 var runnerModules = convertArgToArray(argv, 'runner-module');
 var sauceTags = convertArgToArray(argv, 'sauce-tag');
@@ -149,7 +149,7 @@ if (!capabilities) {
 lodash.merge(kommandoConfig, {
   client: argv['client'],
   driver: argv['driver'],
-  driverArgs: {
+  driverOptions: {
     sauceUser: argv['sauce-user'],
     sauceKey: argv['sauce-key'],
     sauceName: argv['sauce-name'],
@@ -158,7 +158,7 @@ lodash.merge(kommandoConfig, {
     seleniumUrl: argv['selenium-url']
   },
   runner: argv['runner'],
-  runnerArgs: runnerArgs,
+  runnerOptions: runnerOptions,
   runnerKommandoGlobals: runnerKommandoGlobals,
   runnerModules: runnerModules,
   capabilities: capabilities,

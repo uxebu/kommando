@@ -10,7 +10,7 @@ module.exports = function(config) {
     ignoreLeaks: false,
     ui: 'bdd',
     reporter: 'spec'
-  }, config.runnerArgs);
+  }, config.runnerOptions);
 
   global.kommando = config.kommando;
   mochaInstance = new Mocha(options);
