@@ -3,7 +3,7 @@ var driverLauncher = require('../driver-launcher.js');
 var address = require('address');
 var freeport = require('freeport');
 
-module.exports = function(config) {
+module.exports = function(options) {
 
   return {
     _launcher: null,
@@ -12,7 +12,7 @@ module.exports = function(config) {
       console.log('Starting Appium server ...');
 
       freeport(function(err, port) {
-        var options = {
+        var driverLauncherOptions = {
           args: [
             '--port', port
           ],
@@ -20,11 +20,12 @@ module.exports = function(config) {
           port: port,
           path: '/wd/hub'
         }
-        this._launcher = driverLauncher(config.appiumPath || 'appium', options).start(function(error, url) {
-          console.log('Appium server started at: ' + url);
-          this._seleniumUrl = url;
-          callback(error, url, {});
-        }.bind(this));
+        this._launcher = driverLauncher(options.appiumPath || 'appium', driverLauncherOptions)
+          .start(function(error, url) {
+            console.log('Appium server started at: ' + url);
+            this._seleniumUrl = url;
+            callback(error, url, {});
+          }.bind(this));
 
       }.bind(this));
     },

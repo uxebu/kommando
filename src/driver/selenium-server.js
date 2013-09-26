@@ -4,7 +4,7 @@ var address = require('address');
 var freeport = require('freeport');
 var webdrvr = require('webdrvr');
 
-module.exports = function(config) {
+module.exports = function(options) {
 
   return {
     _launcher: null,
@@ -15,15 +15,15 @@ module.exports = function(config) {
       freeport(function(err, port) {
         var args = ['-jar', webdrvr.selenium.path, '-port', port]
           .concat(webdrvr.args)
-          .concat(config.seleniumArgs || []);
+          .concat(options.args || []);
         
-        var options = {
+        var driverLauncherOptions = {
           args: args,
           hostname: address.ip() || address.ip('lo'),
           port: port,
           path: '/wd/hub'
         }
-        this._launcher = driverLauncher('java', options).start(function(error, url) {
+        this._launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
           console.log('Selenium server started at: ' + url);
           this._seleniumUrl = url;
           callback(error, url, {});

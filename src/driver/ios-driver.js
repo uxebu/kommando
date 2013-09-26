@@ -4,7 +4,7 @@ var address = require('address');
 var freeport = require('freeport');
 var webdrvr = require('webdrvr');
 
-module.exports = function(config) {
+module.exports = function(options) {
 
   return {
     _launcher: null,
@@ -13,7 +13,7 @@ module.exports = function(config) {
       console.log('Starting iOS-Driver server ...');
 
       freeport(function(err, port) {
-        var options = {
+        var driverLauncherOptions = {
           args: [
             '-jar', webdrvr.iosdriver.path, '-simulators', '-port', port
           ],
@@ -21,7 +21,7 @@ module.exports = function(config) {
           port: port,
           path: '/wd/hub'
         }
-        this._launcher = driverLauncher('java', options).start(function(error, url) {
+        this._launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
           console.log('iOS-Driver server started at: ' + url);
           this._seleniumUrl = url;
           callback(error, url, {});

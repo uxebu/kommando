@@ -3,14 +3,14 @@ var url = require('url');
 var async = require('async');
 var SauceLabs = require('saucelabs');
 
-module.exports = function(config) {
+module.exports = function(options) {
   
   return {
     _sauceAccount: null,
     create: function(callback) {
       this._sauceAccount = new SauceLabs({
-        username: config.sauceUser,
-        password: config.sauceKey
+        username: options.sauceUser,
+        password: options.sauceKey
       });
 
       var seleniumUrl = {
@@ -22,15 +22,15 @@ module.exports = function(config) {
 
       console.log('Using SauceLabs selenium server at: ' + url.format(seleniumUrl));
 
-      seleniumUrl.auth = config.sauceUser + ':' + config.sauceKey;
+      seleniumUrl.auth = options.sauceUser + ':' + options.sauceKey;
       seleniumUrl = url.format(seleniumUrl);
 
       callback(null, seleniumUrl, {
-        username: config.sauceUser,
-        accessKey: config.sauceKey,
-        name: config.sauceName,
-        build: config.sauceBuild,
-        tags: config.sauceTags
+        username: options.sauceUser,
+        accessKey: options.sauceKey,
+        name: options.sauceName,
+        build: options.sauceBuild,
+        tags: options.sauceTags
       });
     },
     end: function(results, callback) {
