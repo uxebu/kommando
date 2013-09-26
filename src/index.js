@@ -26,7 +26,9 @@ var defaultConfig = {
   },
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
-  runnerOptions: {},
+  runnerOptions: {
+    timeout: 10 * 1000
+  },
   runnerModules: [
     'jasmine-selenium-webdriver'
   ],

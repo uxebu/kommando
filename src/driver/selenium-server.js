@@ -28,9 +28,13 @@ module.exports = function(options) {
           path: '/wd/hub'
         }
         launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
-          console.log('Selenium server started at: ' + url);
-          seleniumUrl = url;
-          callback(error, url);
+          if (error) {
+            callback(error);
+          } else {
+            console.log('Selenium server started at: ' + url);
+            seleniumUrl = url;
+            callback(null, url);
+          }
         }.bind(this));
 
       }.bind(this));

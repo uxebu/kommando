@@ -22,20 +22,23 @@ module.exports = function(options) {
     },
     start: function(callback) {
       console.log('Starting iOS-Driver server ...');
-
+      var args = ['-jar', webdrvr.iosdriver.path, '-simulators', '-port', port]
+        .concat(options.args || []);
       freeport(function(err, port) {
         var driverLauncherOptions = {
-          args: [
-            '-jar', webdrvr.iosdriver.path, '-simulators', '-port', port
-          ],
+          args: args,
           hostname: address.ip() || address.ip('lo'),
           port: port,
           path: '/wd/hub'
         }
         launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
-          console.log('iOS-Driver server started at: ' + url);
-          seleniumUrl = url;
-          callback(error, url);
+          if (error) {
+            callback(error);
+          } else {
+            console.log('iOS-Driver server started at: ' + url);
+            seleniumUrl = url;
+            callback(null, url);
+          }
         }.bind(this));
 
       }.bind(this));

@@ -23,21 +23,23 @@ module.exports = function(options) {
     },
     start: function(callback) {
       console.log('Starting Appium server ...');
-
+      var args = ['--port', port].concat(options.args || []);
       freeport(function(err, port) {
         var driverLauncherOptions = {
-          args: [
-            '--port', port
-          ],
+          args: args,
           hostname: address.ip() || address.ip('lo'),
           port: port,
           path: '/wd/hub'
         }
         launcher = driverLauncher(options.appiumPath || 'appium', driverLauncherOptions)
           .start(function(error, url) {
-            console.log('Appium server started at: ' + url);
-            seleniumUrl = url;
-            callback(error, url);
+            if (error) {
+              callback(error);
+            } else {
+              console.log('Appium server started at: ' + url);
+              seleniumUrl = url;
+              callback(null, url);
+            }
           }.bind(this));
 
       }.bind(this));
