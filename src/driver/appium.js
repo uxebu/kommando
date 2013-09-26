@@ -1,51 +1,37 @@
-var spawn = require('child_process').spawn;
+var driverLauncher = require('../driver-launcher.js');
 
+var address = require('address');
 var freeport = require('freeport');
+var webdrvr = require('webdrvr');
 
 module.exports = function(config) {
 
   return {
-    _appiumProcess: null,
+    _launcher: null,
     _seleniumUrl: '',
     create: function(callback) {
-      console.log('Starting appium server ...');
+      console.log('Starting Appium server ...');
 
       freeport(function(err, port) {
-        var child, seleniumUrl;
-        var exitFunc = function(err) {
-          callback(new Error([
-            'Failed starting Appium.',
-            err ? ': ' + err.stack : ''
-          ].join('')));
-        };
-
-        if (err) {
-          callback(err);
-        } else {
-          this._seleniumUrl = seleniumUrl = [
-            'http://localhost:',
-            port,
-            '/wd/hub'
-          ].join('');
-          this._appiumProcess = child = spawn(config.appiumPath || 'appium', [
+        var config = {
+          args: [
             '--port', port
-          ]);
-          child.stdout.on('data', function(data) {
-            if (data.toString().indexOf('Welcome to Appium') !== -1) {
-              console.log('Appium server started at: ' + seleniumUrl);
-              callback(null, seleniumUrl, {});
-            }
-          });
-          child.once('exit', exitFunc);
-          child.once('error', exitFunc);
+          ],
+          hostname: address.ip() || address.ip('lo'),
+          port: port,
+          path: '/wd/hub'
         }
+        this._launcher = driverLauncher(config.appiumPath || 'appium', config).start(function(error, url) {
+          console.log('Appium server started at: ' + url);
+          this._seleniumUrl = url;
+          callback(error, url, {});
+        }.bind(this));
 
       }.bind(this));
     },
     end: function(results, callback) {
-      console.log('Shutting down appium server at: ' + this._seleniumUrl);
-      this._appiumProcess.kill('SIGTERM');
-      callback(null);
+      console.log('Shutting down Appium server at: ' + this._seleniumUrl);
+      this._launcher.stop(callback);
     }
   };
 

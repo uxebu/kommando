@@ -31,7 +31,8 @@
     "mocha": "~1.12.1",
     "wd": "~0.1.4",
     "glob": "~3.2.6",
-    "freeport": "~1.0.2"
+    "freeport": "~1.0.2",
+    "address": "0.0.2"
   },
   "devDependencies": {
     "expect.js": "~0.2.0"
