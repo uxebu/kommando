@@ -71,7 +71,7 @@ var run = function(config, callback) {
 
   var runTestsFunctions = [];
 
-  driver.create(function(error, seleniumUrl, capabiltiesAddon) {
+  driver.start(function(error, seleniumUrl, capabiltiesAddon) {
     if (error) {
       console.log(error);
       process.exit(error ? 0 : 1);
@@ -90,7 +90,7 @@ var run = function(config, callback) {
       if (error) {
         console.log(error);
       }
-      driver.end(results, function(endError) {
+      driver.stop(results, function(endError) {
         if (typeof callback === 'function') {
           callback(error && endError, results);
         }

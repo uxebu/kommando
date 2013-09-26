@@ -9,7 +9,7 @@ module.exports = function(options) {
   return {
     _launcher: null,
     _seleniumUrl: '',
-    create: function(callback) {
+    start: function(callback) {
       console.log('Starting Selenium server ...');
 
       freeport(function(err, port) {
@@ -31,7 +31,7 @@ module.exports = function(options) {
 
       }.bind(this));
     },
-    end: function(results, callback) {
+    stop: function(results, callback) {
       console.log('Shutting down Selenium server at: ' + this._seleniumUrl);
       this._launcher.stop(callback);
     }

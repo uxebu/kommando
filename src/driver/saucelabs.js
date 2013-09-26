@@ -7,7 +7,7 @@ module.exports = function(options) {
   
   return {
     _sauceAccount: null,
-    create: function(callback) {
+    start: function(callback) {
       this._sauceAccount = new SauceLabs({
         username: options.sauceUser,
         password: options.sauceKey
@@ -33,7 +33,7 @@ module.exports = function(options) {
         tags: options.sauceTags
       });
     },
-    end: function(results, callback) {
+    stop: function(results, callback) {
       var sauceUpdateFunctions = [];
       var sauceAccount = this._sauceAccount;
       results.forEach(function(result) {
