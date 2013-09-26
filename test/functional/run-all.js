@@ -29,7 +29,7 @@ var configWdMocha = {
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'wd', 'mocha-github.js'),
-    path.join(__dirname, 'swd', 'mocha-google-search.js')
+    path.join(__dirname, 'wd', 'mocha-google-search.js')
   ],
   runner: 'mocha',
   runnerModules: [],
