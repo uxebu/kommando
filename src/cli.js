@@ -116,6 +116,7 @@ function collectArgsWithPrefix(argv, argPrefix) {
   return obj;
 }
 
+var browsers = convertArgToArray(argv, 'browser');
 var runnerOptions = collectArgsWithPrefix(argv, 'runner-option-');
 var runnerKommandoGlobals = collectArgsWithPrefix(argv, 'runner-global-');
 var runnerModules = convertArgToArray(argv, 'runner-module');
@@ -135,18 +136,8 @@ if (!argv.driver && !kommandoConfig.driver) {
   }
 }
 
-var capabilities = kommandoConfig.capabilities;
-
-if (!capabilities) {
-  var browsers = convertArgToArray(argv, 'browser');
-  capabilities = browsers.map(function(browser) {
-    return {
-      browserName: browser
-    };
-  });
-}
-
 lodash.merge(kommandoConfig, {
+  browsers: browsers,
   client: argv['client'],
   driver: argv['driver'],
   driverOptions: {
@@ -161,7 +152,6 @@ lodash.merge(kommandoConfig, {
   runnerOptions: runnerOptions,
   runnerKommandoGlobals: runnerKommandoGlobals,
   runnerModules: runnerModules,
-  capabilities: capabilities,
   tests: argv._
 });
 

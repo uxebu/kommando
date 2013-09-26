@@ -52,11 +52,20 @@ var run = function(config, callback) {
   var client = detectModulePath(config.client, 'client');
   var driver = require(detectModulePath(config.driver, 'driver'))(config.driverOptions);
   var runner = detectModulePath(config.runner, 'runner');
-
   var runnerModules = [];
   config.runnerModules.forEach(function(runnerModuleName) {
     runnerModules.push(detectModulePath(runnerModuleName, 'runner-module'));
   });
+
+  // if no capabilities were passed use the passed browsers instead
+  var capabilities = config.capabilities;
+  if (capabilities.length === 0) {
+    capabilities = config.browsers.map(function(browser) {
+      return {
+        browserName: browser
+      };
+    });
+  }
 
   var tests = [];
   config.tests.forEach(function(test) {
@@ -78,7 +87,7 @@ var run = function(config, callback) {
       console.log(error);
       process.exit(error ? 0 : 1);
     }
-    config.capabilities.forEach(function(capabilities) {
+    capabilities.forEach(function(capabilities) {
       capabilities = driver.updateCapabilities(capabilities);
       runTestsFunctions.push(runTests.bind(
         null, tests, seleniumUrl,
