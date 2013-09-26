@@ -6,6 +6,7 @@ var glob = require('glob');
 var lodash = require('lodash');
 
 var defaultConfig = {
+  browsers: ['phantomjs'],
   capabilities: [],
   tests: [],
   driver: 'selenium-server',
@@ -20,8 +21,8 @@ var defaultConfig = {
     sauceBuild: undefined,
     sauceTags: undefined,
     seleniumUrl: undefined,
-    javaPath: '',
-    appiumPath: ''
+    javaPath: 'java',
+    appiumPath: 'appium'
   },
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
