@@ -10,6 +10,9 @@ module.exports = function(options) {
   var seleniumUrl = '';
 
   return {
+    updateCapabilities: function(caps) {
+      return caps;
+    },
     start: function(callback) {
       console.log('Starting Selenium server ...');
 
@@ -27,7 +30,7 @@ module.exports = function(options) {
         launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
           console.log('Selenium server started at: ' + url);
           seleniumUrl = url;
-          callback(error, url, {});
+          callback(error, url);
         }.bind(this));
 
       }.bind(this));

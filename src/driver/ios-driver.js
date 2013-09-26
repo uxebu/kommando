@@ -2,6 +2,7 @@ var driverLauncher = require('../driver-launcher.js');
 
 var address = require('address');
 var freeport = require('freeport');
+var lodash = require('lodash');
 var webdrvr = require('webdrvr');
 
 module.exports = function(options) {
@@ -10,6 +11,15 @@ module.exports = function(options) {
   var seleniumUrl = '';
 
   return {
+    updateCapabilities: function(caps) {
+      var updatedCaps = caps;
+      if (['ipad', 'iphone'].indexOf(caps.browserName) > -1) {
+        updatedCaps = lodash.merge({}, {
+          language: 'en'
+        }, caps);
+      }
+      return updatedCaps;
+    },
     start: function(callback) {
       console.log('Starting iOS-Driver server ...');
 
@@ -25,7 +35,7 @@ module.exports = function(options) {
         launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
           console.log('iOS-Driver server started at: ' + url);
           seleniumUrl = url;
-          callback(error, url, {});
+          callback(error, url);
         }.bind(this));
 
       }.bind(this));

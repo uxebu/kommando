@@ -71,13 +71,13 @@ var run = function(config, callback) {
 
   var runTestsFunctions = [];
 
-  driver.start(function(error, seleniumUrl, capabiltiesAddon) {
+  driver.start(function(error, seleniumUrl) {
     if (error) {
       console.log(error);
       process.exit(error ? 0 : 1);
     }
     config.capabilities.forEach(function(capabilities) {
-      lodash.merge(capabilities, capabiltiesAddon);
+      capabilities = driver.updateCapabilities(capabilities);
       runTestsFunctions.push(runTests.bind(
         null, tests, seleniumUrl,
         capabilities, client, runner,

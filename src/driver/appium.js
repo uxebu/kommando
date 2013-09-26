@@ -2,6 +2,7 @@ var driverLauncher = require('../driver-launcher.js');
 
 var address = require('address');
 var freeport = require('freeport');
+var lodash = require('lodash');
 
 module.exports = function(options) {
 
@@ -9,6 +10,17 @@ module.exports = function(options) {
   var seleniumUrl = '';
 
   return {
+    updateCapabilities: function(caps) {
+      var updatedCaps = caps;
+      if (['ipad', 'iphone'].indexOf(caps.browserName) > -1) {
+        updatedCaps = lodash.merge({}, {
+          device: caps.browserName,
+          app: 'safari',
+          version: '6.1'
+        }, caps);
+      }
+      return updatedCaps;
+    },
     start: function(callback) {
       console.log('Starting Appium server ...');
 
@@ -25,7 +37,7 @@ module.exports = function(options) {
           .start(function(error, url) {
             console.log('Appium server started at: ' + url);
             seleniumUrl = url;
-            callback(error, url, {});
+            callback(error, url);
           }.bind(this));
 
       }.bind(this));

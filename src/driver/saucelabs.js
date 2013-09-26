@@ -1,6 +1,7 @@
 var url = require('url');
 
 var async = require('async');
+var lodash = require('lodash');
 var SauceLabs = require('saucelabs');
 
 module.exports = function(options) {
@@ -8,6 +9,15 @@ module.exports = function(options) {
   var sauceAccount = null;
 
   return {
+    updateCapabilities: function(caps) {
+      return lodash.merge({}, {
+        username: options.sauceUser,
+        accessKey: options.sauceKey,
+        name: options.sauceName,
+        build: options.sauceBuild,
+        tags: options.sauceTags
+      }, caps);
+    },
     start: function(callback) {
       sauceAccount = new SauceLabs({
         username: options.sauceUser,
@@ -26,13 +36,7 @@ module.exports = function(options) {
       seleniumUrl.auth = options.sauceUser + ':' + options.sauceKey;
       seleniumUrl = url.format(seleniumUrl);
 
-      callback(null, seleniumUrl, {
-        username: options.sauceUser,
-        accessKey: options.sauceKey,
-        name: options.sauceName,
-        build: options.sauceBuild,
-        tags: options.sauceTags
-      });
+      callback(null, seleniumUrl);
     },
     stop: function(results, callback) {
       var sauceUpdateFunctions = [];
