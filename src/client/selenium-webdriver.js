@@ -10,8 +10,6 @@ module.exports = function(seleniumUrl) {
         .withCapabilities(capabilities)
         .build();
 
-      client.manage().timeouts().setScriptTimeout(100000);
-
       client.getSession().then(function(session) {
         this.clients[session.getId()] = client;
         callback(null, client, {

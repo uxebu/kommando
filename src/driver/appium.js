@@ -12,7 +12,7 @@ module.exports = function(config) {
       console.log('Starting Appium server ...');
 
       freeport(function(err, port) {
-        var config = {
+        var options = {
           args: [
             '--port', port
           ],
@@ -20,7 +20,7 @@ module.exports = function(config) {
           port: port,
           path: '/wd/hub'
         }
-        this._launcher = driverLauncher(config.appiumPath || 'appium', config).start(function(error, url) {
+        this._launcher = driverLauncher(config.appiumPath || 'appium', options).start(function(error, url) {
           console.log('Appium server started at: ' + url);
           this._seleniumUrl = url;
           callback(error, url, {});
