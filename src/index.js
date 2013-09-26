@@ -50,7 +50,11 @@ var run = function(config, callback) {
 
   var tests = [];
   config.tests.forEach(function(test) {
-    tests = tests.concat(glob.sync(test));
+    var testFiles = glob.sync(test);
+    if (testFiles.length === 0) {
+      throw new Error('No files found for glob pattern: ' + test);
+    }
+    tests = tests.concat(testFiles);
   });
 
   if (tests.length === 0) {
