@@ -12,6 +12,12 @@ module.exports = function(config) {
 
       freeport(function(err, port) {
         var child, seleniumUrl;
+        var exitFunc = function(err) {
+          callback(new Error([
+            'Failed starting Appium.',
+            err ? ': ' + err.stack : ''
+          ].join('')));
+        };
 
         if (err) {
           callback(err);
@@ -30,12 +36,8 @@ module.exports = function(config) {
               callback(null, seleniumUrl, {});
             }
           });
-          child.once('exit', function() {
-            callback(new Error('Failed starting Appium.'));
-          });
-          child.on('error', function(err) {
-            callback(err);
-          });
+          child.once('exit', exitFunc);
+          child.once('error', exitFunc);
         }
 
       }.bind(this));
