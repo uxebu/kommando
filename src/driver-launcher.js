@@ -50,7 +50,7 @@ module.exports = function(executable, options) {
       var exitFunc = function(error) {
         callback(new Error([
           'Failed starting process: "',
-          (executable + processOptions.args.join(' ')),
+          (executable + ' ' + processOptions.args.join(' ')),
           '"',
           error ? '\nError : ' + error.stack : ''
         ].join('')));
@@ -61,13 +61,17 @@ module.exports = function(executable, options) {
         port: processOptions.port,
         pathname: processOptions.path
       });
-      var process = this._process = spawn(executable, processOptions.args, {
+      var childProcess = this._process = spawn(executable, processOptions.args, {
         stdio: processOptions.stdio
       });
-      process.once('exit', exitFunc);
-      process.once('error', exitFunc);
+      childProcess.once('exit', exitFunc);
+      childProcess.once('error', exitFunc);
 
-      this._waitForServer(serverUrl, processOptions.waitTimeout, callback);
+      this._waitForServer(serverUrl, processOptions.waitTimeout, function(error, url) {
+        childProcess.removeListener('exit', exitFunc);
+        childProcess.removeListener('error', exitFunc);
+        callback(error, url);
+      });
       return this;
     },
     stop: function(callback) {
