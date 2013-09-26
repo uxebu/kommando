@@ -2,7 +2,6 @@ var driverLauncher = require('../driver-launcher.js');
 
 var address = require('address');
 var freeport = require('freeport');
-var webdrvr = require('webdrvr');
 
 module.exports = function(config) {
 
