@@ -28,6 +28,12 @@ var argv = optimist
     type: 'string',
     desc: 'Driver providing Selenium URL'
   })
+  .option('driver-option-*', {
+    desc: [
+      'Option(s) for a specific driver. Overriding default options of driver ',
+      '(e.g. --driver-option-port 12332). Check docs for possible driver options.'
+    ].join('')
+  })
   .option('client', {
     alias: 'w',
     type: 'string',
@@ -47,41 +53,22 @@ var argv = optimist
     default: 'jasmine-selenium-webdriver'
   })
   .option('runner-option-*', {
-    type: 'string',
-    desc: 'Option(s) for a specific test runner. Overriding default options of runner. (e.g. --runner-option-isVerbose or --runner-option-ui tdd)'
+    desc: [
+      'Option(s) for a specific test runner. Overriding default options of runner ',
+      '(e.g. --runner-option-isVerbose or --runner-option-ui tdd). Check docs for possible driver options.'
+    ].join('')
   })
   .option('runner-global-*', {
     type: 'string',
-    desc: 'Global(s) which will be available within the `kommando` runner global (e.g. --runner-global-baseUrl http://localhost or --runner-global-env dev)'
+    desc: [
+      'Global(s) which will be available within the `kommando` runner global ',
+      '(e.g. --runner-global-baseUrl http://localhost or --runner-global-env dev)'
+    ].join('')
   })
   .option('config', {
     alias: 'c',
     type: 'string',
     desc: 'Specifies JSON-formatted configuration file (CLI arguments overwrite config settings)'
-  })
-  .option('selenium-url', {
-    desc: 'URL to a selenium server (e.g. http://localhost:4444/wd/hub)',
-    type: 'string'
-  })
-  .option('sauce-user', {
-    desc: 'Sauce Labs User',
-    type: 'string'
-  })
-  .option('sauce-key', {
-    desc: 'Sauce Labs Key',
-    type: 'string'
-  })
-  .option('sauce-name', {
-    desc: 'Name of the Sauce Labs job',
-    type: 'string'
-  })
-  .option('sauce-build', {
-    desc: 'Build number set for this Sauce Labs job',
-    type: 'string'
-  })
-  .option('sauce-tag', {
-    desc: 'Tag(s) for the Sauce Labs job',
-    type: 'string'
   })
   .argv;
 
@@ -117,6 +104,7 @@ function collectArgsWithPrefix(argv, argPrefix) {
 }
 
 var browsers = convertArgToArray(argv, 'browser');
+var driverOptions = collectArgsWithPrefix(argv, 'driver-option-');
 var runnerOptions = collectArgsWithPrefix(argv, 'runner-option-');
 var runnerKommandoGlobals = collectArgsWithPrefix(argv, 'runner-global-');
 var runnerModules = convertArgToArray(argv, 'runner-module');
@@ -140,14 +128,7 @@ lodash.merge(kommandoConfig, {
   browsers: browsers,
   client: argv['client'],
   driver: argv['driver'],
-  driverOptions: {
-    sauceUser: argv['sauce-user'],
-    sauceKey: argv['sauce-key'],
-    sauceName: argv['sauce-name'],
-    sauceBuild: argv['sauce-build'],
-    sauceTags: sauceTags,
-    seleniumUrl: argv['selenium-url']
-  },
+  driverOptions: driverOptions,
   runner: argv['runner'],
   runnerOptions: runnerOptions,
   runnerKommandoGlobals: runnerKommandoGlobals,
