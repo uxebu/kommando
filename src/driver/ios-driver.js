@@ -22,9 +22,9 @@ module.exports = function(options) {
     },
     start: function(callback) {
       console.log('Starting iOS-Driver server ...');
-      var args = ['-jar', webdrvr.iosdriver.path, '-simulators', '-port', port]
-        .concat(options.args || []);
       freeport(function(err, port) {
+        var args = ['-jar', webdrvr.iosdriver.path, '-simulators', '-port', port]
+          .concat(options.args || []);
         var driverLauncherOptions = {
           args: args,
           hostname: address.ip() || address.ip('lo'),

@@ -23,8 +23,8 @@ module.exports = function(options) {
     },
     start: function(callback) {
       console.log('Starting Appium server ...');
-      var args = ['--port', port].concat(options.args || []);
       freeport(function(err, port) {
+        var args = ['--port', port].concat(options.args || []);
         var driverLauncherOptions = {
           args: args,
           hostname: address.ip() || address.ip('lo'),
