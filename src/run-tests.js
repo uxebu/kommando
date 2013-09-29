@@ -37,11 +37,11 @@ var runTests = function(config) {
       tests: config.tests
     }).run(function(error, passed) {
       var clientIds = Object.keys(client.clients);
-      process.send({
-        passed: passed,
-        clientIds: clientIds
-      });
       client.end(function() {
+        process.send({
+          passed: passed,
+          clientIds: clientIds
+        });
         if (error) {
           console.error(error.stack);
           process.exit(1);

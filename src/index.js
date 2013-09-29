@@ -114,6 +114,11 @@ var run = function(config, callback) {
 var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerOptions, runnerModules, runnerKommandoGlobals, callback) {
   console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
+  var onExit = function(exitCode, signal) {
+    if (exitCode) {
+      callback(new Error('Error occurred executing run-tests process.'));
+    }
+  };
   child.send({
     seleniumUrl: seleniumUrl,
     capabilities: capabilities,
@@ -129,12 +134,9 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, runner
       passed: msg.passed,
       clientIds: msg.clientIds
     });
+    child.removeListener('exit', onExit);
   });
-  child.once('exit', function(exitCode, signal) {
-    if (exitCode) {
-      callback(new Error('Error occurred executing run-tests process.'));
-    }
-  });
+  child.once('exit', onExit);
 };
 
 module.exports = run;
