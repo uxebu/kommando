@@ -62,6 +62,7 @@ var detectModulePath = function(moduleName, type) {
 };
 
 var run = function(config, callback) {
+
   config = lodash.extend({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');

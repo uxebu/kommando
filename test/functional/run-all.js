@@ -32,6 +32,9 @@ var configWdMocha = {
     path.join(__dirname, 'wd', 'mocha-google-search.js')
   ],
   runner: 'mocha',
+  runnerOptions: {
+    reporter: 'nyan'
+  },
   runnerModules: [],
   client: 'wd'
 };

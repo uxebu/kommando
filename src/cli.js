@@ -37,20 +37,17 @@ var argv = optimist
   .option('client', {
     alias: 'w',
     type: 'string',
-    desc: 'Injected JS Webdriver client library',
-    default: 'selenium-webdriver'
+    desc: 'Injected JS Webdriver client library'
   })
   .option('runner', {
     alias: 'r',
     type: 'string',
-    desc: 'Used test runner',
-    default: 'jasmine-node'
+    desc: 'Used test runner'
   })
   .option('runner-module', {
     alias: 'm',
     type: 'string',
-    desc: 'Runner module(s) that are loaded in runner context before tests get added',
-    default: 'jasmine-selenium-webdriver'
+    desc: 'Runner module(s) that are loaded in runner context before tests get added'
   })
   .option('runner-option-*', {
     desc: [
