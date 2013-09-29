@@ -84,8 +84,8 @@ var run = function(config, callback) {
 
   driver.start(function(error, seleniumUrl) {
     if (error) {
-      console.log(error);
-      process.exit(error ? 0 : 1);
+      console.error(error.stack);
+      process.exit(1);
     }
     capabilities.forEach(function(capabilities) {
       capabilities = driver.updateCapabilities(capabilities);
