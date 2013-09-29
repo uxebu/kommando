@@ -99,7 +99,7 @@ var run = function(config, callback) {
     // Execute tests per capability / browser one after another
     async.series(runTestsFunctions, function(error, results) {
       if (error) {
-        console.log(error);
+        console.error(error.stack);
       }
       driver.stop(results, function(endError) {
         if (typeof callback === 'function') {
@@ -125,11 +125,15 @@ var runTests = function(tests, seleniumUrl, capabilities, client, runner, runner
     tests: tests
   });
   child.on('message', function(msg) {
-    child.disconnect();
-    callback(msg.error, {
+    callback(null, {
       passed: msg.passed,
       clientIds: msg.clientIds
     });
+  });
+  child.once('exit', function(exitCode, signal) {
+    if (exitCode) {
+      callback(new Error('Error occurred executing run-tests process.'));
+    }
   });
 };
 
