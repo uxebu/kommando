@@ -27,7 +27,22 @@ var defaultConfig = {
   client: 'selenium-webdriver',
   runner: 'jasmine-node',
   runnerOptions: {
-    timeout: 10 * 1000
+    timeout: 100 * 1000,
+    // jasmine-node defaults
+    isVerbose: false,
+    showColors: true,
+    teamcity: false,
+    junitreport: {
+      report: false,
+      savePath : "./reports/",
+      useDotNotation: true,
+      consolidate: true
+    },
+    // mocha defaults
+    globals: ['should', 'kommando'],
+    ignoreLeaks: false,
+    ui: 'bdd',
+    reporter: 'spec'
   },
   runnerModules: [
     'jasmine-selenium-webdriver'

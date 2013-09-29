@@ -2,11 +2,13 @@ var jasmine = require('jasmine-node');
 var lodash = require('lodash');
 
 module.exports = function(config) {
+  var runnerOptions = config.runnerOptions;
+
   global.kommando = config.kommando;
   config.runnerModules.forEach(function(runnerModule) {
     require(runnerModule);
   });
-  jasmine.getEnv().defaultTimeoutInterval = 100000;
+  jasmine.getEnv().defaultTimeoutInterval = runnerOptions.timeout || (100 * 1000);
 
   describe(config.kommando.capabilities.browserName, function() {
     config.tests.forEach(function(test) {
@@ -43,7 +45,7 @@ module.exports = function(config) {
       };
 
       var options = lodash.merge(
-        {}, defaultJasmineOptions, config.runnerOptions, nonChangeableJasmineOptions
+        {}, defaultJasmineOptions, runnerOptions, nonChangeableJasmineOptions
       );
 
       jasmine.executeSpecsInFolder(options);
