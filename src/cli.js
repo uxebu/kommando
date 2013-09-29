@@ -93,11 +93,23 @@ function convertArgToArray(argv, argName) {
   }
 }
 
+function prepareObject(key, value) {
+  var rootObject = {};
+  var obj = rootObject;
+  var splitKeys = key.split('.');
+  lodash.forEach(splitKeys, function(splitKey) {
+    obj[splitKey] = obj = value;
+  });
+  return rootObject;
+}
+
 function collectArgsWithPrefix(argv, argPrefix) {
   var obj = {};
+  var slicedKey;
   Object.keys(argv).forEach(function(key) {
     if (key.indexOf(argPrefix) === 0) {
-      obj[key.slice(argPrefix.length)] = argv[key];
+      slicedKey = key.slice(argPrefix.length);
+      lodash.merge(obj, prepareObject(slicedKey, argv[key]));
     }
   });
   return obj;
