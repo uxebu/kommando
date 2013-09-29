@@ -111,7 +111,11 @@ var run = function(config, callback) {
   });
 };
 
-var runTests = function(tests, seleniumUrl, capabilities, client, runner, runnerOptions, runnerModules, runnerKommandoGlobals, callback) {
+var runTests = function(
+  tests, seleniumUrl, capabilities,
+  client, runner, runnerOptions,
+  runnerModules, runnerKommandoGlobals, callback
+) {
   console.log('Run tests using "' + capabilities.browserName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
   var onExit = function(exitCode, signal) {
