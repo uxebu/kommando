@@ -126,10 +126,10 @@ if (!argv.driver && !kommandoConfig.driver) {
 
 lodash.merge(kommandoConfig, {
   browsers: browsers,
-  client: argv['client'],
-  driver: argv['driver'],
+  client: argv.client,
+  driver: argv.driver,
   driverOptions: driverOptions,
-  runner: argv['runner'],
+  runner: argv.runner,
   runnerOptions: runnerOptions,
   runnerKommandoGlobals: runnerKommandoGlobals,
   runnerModules: runnerModules,

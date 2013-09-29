@@ -42,7 +42,7 @@ var detectModulePath = function(moduleName, type) {
   } else if (fs.existsSync(moduleName)) {
     return moduleName;
   } else {
-    throw new Error('The passed "' + type + '" module "' + moduleName + '" was not found.')
+    throw new Error('The passed "' + type + '" module "' + moduleName + '" was not found.');
   }
 };
 
@@ -77,7 +77,7 @@ var run = function(config, callback) {
   });
 
   if (tests.length === 0) {
-    throw new Error('No test files found.')
+    throw new Error('No test files found.');
   }
 
   var runTestsFunctions = [];

@@ -17,7 +17,7 @@ function seal(fn) {
   return function() {
     fn();
   };
-};
+}
 
 
 /**
@@ -27,6 +27,14 @@ function seal(fn) {
 * @return {!Function} The new function.
 */
 function wrapInControlFlow(globalFn) {
+  function asyncTestFn(fn) {
+    return function(done) {
+      flow.execute(function() {
+        fn.call(jasmine.getEnv().currentSpec);
+      }).then(seal(done), done);
+    };
+  }
+
   return function() {
     switch (arguments.length) {
       case 1:
@@ -47,15 +55,7 @@ function wrapInControlFlow(globalFn) {
         throw Error('Invalid # arguments: ' + arguments.length);
     }
   };
-
-  function asyncTestFn(fn) {
-    return function(done) {
-      flow.execute(function() {
-        fn.call(jasmine.getEnv().currentSpec);
-      }).then(seal(done), done);
-    };
-  };
-};
+}
 
 jasmine.Env.prototype.it = wrapInControlFlow(jasmine.Env.prototype.it);
 
@@ -81,7 +81,7 @@ function wrapMatcher(matcher, actualPromise) {
       }
     });
   };
-};
+}
 
 /**
 * Return a chained set of matcher functions which will be evaluated
@@ -91,12 +91,12 @@ function wrapMatcher(matcher, actualPromise) {
 */
 function promiseMatchers(actualPromise) {
   var promises = {};
-  for (matcher in jasmine.Matchers.prototype) {
+  for (var matcher in jasmine.Matchers.prototype) {
     promises[matcher] = wrapMatcher(matcher, actualPromise);
-  };
+  }
 
   return promises;
-};
+}
 
 originalExpect = global.expect;
 

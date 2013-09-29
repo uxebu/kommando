@@ -30,7 +30,7 @@ module.exports = function(options) {
           hostname: address.ip() || address.ip('lo'),
           port: port,
           path: '/wd/hub'
-        }
+        };
         launcher = driverLauncher(options.appiumPath || 'appium', driverLauncherOptions)
           .start(function(error, url) {
             if (error) {

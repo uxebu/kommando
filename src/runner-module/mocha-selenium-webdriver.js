@@ -98,6 +98,14 @@ function seal(fn) {
  * @return {!Function} The new function.
  */
 function wrapped(globalFn) {
+
+  function asyncTestFn(fn) {
+    return function(done) {
+      this.timeout(0);
+      flow.execute(fn).then(seal(done), done);
+    };
+  }
+
   return function() {
     switch (arguments.length) {
       case 1:
@@ -112,13 +120,6 @@ function wrapped(globalFn) {
         throw Error('Invalid # arguments: ' + arguments.length);
     }
   };
-
-  function asyncTestFn(fn) {
-    return function(done) {
-      this.timeout(0);
-      flow.execute(fn).then(seal(done), done);
-    };
-  }
 }
 
 
@@ -131,16 +132,6 @@ function wrapped(globalFn) {
  *     exports.describe that ignore tests as indicated by the predicate.
  */
 function ignore(predicateFn) {
-  var describe = wrap(exports.xdescribe, exports.describe);
-  describe.only = wrap(exports.xdescribe, exports.describe.only);
-
-  var it = wrap(exports.xit, exports.it);
-  it.only = wrap(exports.xit, exports.it.only);
-
-  return {
-    describe: describe,
-    it: it
-  };
 
   function wrap(onSkip, onRun) {
     return function(title, fn) {
@@ -151,6 +142,17 @@ function ignore(predicateFn) {
       }
     };
   }
+
+  var describe = wrap(exports.xdescribe, exports.describe);
+  describe.only = wrap(exports.xdescribe, exports.describe.only);
+
+  var it = wrap(exports.xit, exports.it);
+  it.only = wrap(exports.xit, exports.it.only);
+
+  return {
+    describe: describe,
+    it: it
+  };
 }
 
 // just works for mocha's "bdd"-interface at the moment

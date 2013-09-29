@@ -24,5 +24,5 @@ module.exports = function(seleniumUrl) {
       }
       async.series(quitFunctions, callback);
     }
-  }
+  };
 };

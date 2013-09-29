@@ -44,7 +44,7 @@ module.exports = function(executable, options) {
             getStatus();
           }, POLL_TIMEOUT);
         }
-      };
+      }
     },
     start: function(callback) {
       var exitFunc = function(error) {

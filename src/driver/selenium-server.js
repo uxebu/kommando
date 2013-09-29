@@ -26,7 +26,7 @@ module.exports = function(options) {
           hostname: address.ip() || address.ip('lo'),
           port: port,
           path: '/wd/hub'
-        }
+        };
         launcher = driverLauncher('java', driverLauncherOptions).start(function(error, url) {
           if (error) {
             callback(error);
