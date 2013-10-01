@@ -82,7 +82,7 @@ if (argv.help) {
 function convertArgToArray(argv, argName) {
   var arg = argv[argName];
   if (!arg) {
-    return [];
+    return null;
   } else if (lodash.isArray(arg)) {
     return arg;
   } else {

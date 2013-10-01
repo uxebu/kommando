@@ -35,7 +35,7 @@ var configWdMocha = {
   runnerOptions: {
     reporter: 'nyan'
   },
-  runnerModules: [],
+  runnerModules: null,
   client: 'wd'
 };
 

@@ -64,6 +64,7 @@ var detectModulePath = function(moduleName, type) {
 var run = function(config, callback) {
 
   config = lodash.extend({}, defaultConfig, config);
+  config = lodash.merge({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');
   var driver = require(detectModulePath(config.driver, 'driver'))(config.driverOptions);
