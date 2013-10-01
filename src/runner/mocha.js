@@ -18,6 +18,8 @@ module.exports = function(config) {
 
   mochaInstance.suite.on('pre-require', function(context, file, mocha) {
     config.runnerModules.forEach(function(runnerModule) {
+      // ensure that we reload every runner-module per spec
+      delete require.cache[require.resolve(runnerModule)];
       require(runnerModule);
     });
   });

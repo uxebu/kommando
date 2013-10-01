@@ -44,9 +44,7 @@ var defaultConfig = {
     ui: 'bdd',
     reporter: 'spec'
   },
-  runnerModules: [
-    'jasmine-selenium-webdriver'
-  ],
+  runnerModules: null,
   runnerKommandoGlobals: {}
 };
 

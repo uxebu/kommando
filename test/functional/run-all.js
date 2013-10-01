@@ -13,11 +13,22 @@ var configSeleniumWebdriverJasmine = {
   ]
 };
 
-var configSeleniumWebdriverMocha = {
+var configSeleniumWebdriverJasmineWithHelper = {
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'selenium-webdriver', 'mocha-github.js'),
-    path.join(__dirname, 'selenium-webdriver', 'mocha-google-search.js')
+    path.join(__dirname, 'selenium-webdriver', 'jasmine-selenium-webdriver', 'jasmine-github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'jasmine-selenium-webdriver', 'jasmine-google-search.js')
+  ],
+  runnerModules: [
+    'jasmine-selenium-webdriver'
+  ]
+};
+
+var configSeleniumWebdriverMochaWithHelper = {
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-google-search.js')
   ],
   runnerModules: [
     'mocha-selenium-webdriver'
@@ -35,16 +46,18 @@ var configWdMocha = {
   runnerOptions: {
     reporter: 'nyan'
   },
-  runnerModules: null,
   client: 'wd'
 };
 
 run(configSeleniumWebdriverJasmine, function(error, results) {
   handleErrorCallback(error, results);
-  run(configSeleniumWebdriverMocha, function(error, results) {
+  run(configSeleniumWebdriverJasmineWithHelper, function(error, results) {
     handleErrorCallback(error, results);
-    run(configWdMocha, function(error, results) {
-      process.exit(0);
+    run(configSeleniumWebdriverMochaWithHelper, function(error, results) {
+      handleErrorCallback(error, results);
+      run(configWdMocha, function(error, results) {
+        process.exit(0);
+      });
     });
   });
 });
