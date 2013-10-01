@@ -14,7 +14,7 @@ module.exports = function(config) {
 
   global.kommando = config.kommando;
   mochaInstance = new Mocha(options);
-  mochaInstance.suite.title = config.kommando.capabilities.browserName;
+  mochaInstance.suite.title = config.kommando.capabilitiesName;
 
   mochaInstance.suite.on('pre-require', function(context, file, mocha) {
     config.runnerModules.forEach(function(runnerModule) {

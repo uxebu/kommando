@@ -62,15 +62,13 @@ var detectModulePath = function(moduleName, type) {
 };
 
 var run = function(config, callback) {
-
-  config = lodash.extend({}, defaultConfig, config);
   config = lodash.merge({}, defaultConfig, config);
 
   var client = detectModulePath(config.client, 'client');
   var driver = require(detectModulePath(config.driver, 'driver'))(config.driverOptions);
   var runner = detectModulePath(config.runner, 'runner');
   var runnerModules = [];
-  config.runnerModules.forEach(function(runnerModuleName) {
+  lodash.forEach(config.runnerModules, function(runnerModuleName) {
     runnerModules.push(detectModulePath(runnerModuleName, 'runner-module'));
   });
 
@@ -85,7 +83,7 @@ var run = function(config, callback) {
   }
 
   var tests = [];
-  config.tests.forEach(function(test) {
+  lodash.forEach(config.tests, function(test) {
     var testFiles = glob.sync(test);
     if (testFiles.length === 0) {
       throw new Error('No files found for glob pattern: ' + test);
@@ -133,7 +131,8 @@ var runTests = function(
   client, runner, runnerOptions,
   runnerModules, runnerKommandoGlobals, callback
 ) {
-  console.log('Run tests using "' + capabilities.browserName + '"');
+  var capabilitiesName = flattenCapabilities(capabilities);
+  console.log('Run tests using "' + capabilitiesName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
   var onExit = function(exitCode, signal) {
     if (exitCode) {
@@ -143,6 +142,7 @@ var runTests = function(
   child.send({
     seleniumUrl: seleniumUrl,
     capabilities: capabilities,
+    capabilitiesName: capabilitiesName,
     client: client,
     runner: runner,
     runnerOptions: runnerOptions,
@@ -158,6 +158,18 @@ var runTests = function(
     child.removeListener('exit', onExit);
   });
   child.once('exit', onExit);
+};
+
+// avoid sensitive information (in this case of SauceLabs)
+var IGNORED_CAPS_PROPERTIES = ['accessKey', 'username'];
+var flattenCapabilities = function(caps) {
+  var retCaps = [];
+  lodash.forEach(caps, function(value, key) {
+    if (IGNORED_CAPS_PROPERTIES.indexOf(key) === -1) {
+      retCaps.push(key + '=' + value);
+    }
+  });
+  return retCaps.join(',');
 };
 
 module.exports = run;

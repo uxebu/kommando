@@ -28,7 +28,8 @@ var runTests = function(config) {
     var kommando = lodash.extend({}, config.runnerKommandoGlobals, data, {
       browser: browser,
       createBrowser: client.create.bind(client),
-      capabilities: config.capabilities
+      capabilities: config.capabilities,
+      capabilitiesName: config.capabilitiesName
     });
     runner({
       kommando: kommando,
