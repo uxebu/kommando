@@ -33,6 +33,9 @@ var configSeleniumWebdriverMochaWithHelper = {
   runnerModules: [
     'mocha-selenium-webdriver'
   ],
+  runnerOptions: {
+    reporter: 'dot'
+  },
   runner: 'mocha'
 };
 
@@ -44,9 +47,22 @@ var configWdMocha = {
   ],
   runner: 'mocha',
   runnerOptions: {
-    reporter: 'nyan'
+    reporter: 'spec'
   },
   client: 'wd'
+};
+
+var configWdPromiseMocha = {
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'wd-promise', 'mocha-github.js'),
+    path.join(__dirname, 'wd-promise', 'mocha-google-search.js')
+  ],
+  runner: 'mocha',
+  runnerOptions: {
+    reporter: 'nyan'
+  },
+  client: 'wd-promise'
 };
 
 run(configSeleniumWebdriverJasmine, function(error, results) {
@@ -56,7 +72,11 @@ run(configSeleniumWebdriverJasmine, function(error, results) {
     run(configSeleniumWebdriverMochaWithHelper, function(error, results) {
       handleErrorCallback(error, results);
       run(configWdMocha, function(error, results) {
-        process.exit(0);
+        handleErrorCallback(error, results);
+        run(configWdPromiseMocha, function(error, results) {
+          handleErrorCallback(error, results);
+          process.exit(0);
+        });
       });
     });
   });
