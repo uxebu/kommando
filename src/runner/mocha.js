@@ -9,7 +9,7 @@ module.exports = function(config) {
     timeout: 10000,
     ignoreLeaks: false,
     ui: 'bdd',
-    reporter: 'spec'
+    reporter: 'dot'
   }, config.runnerOptions);
 
   global.kommando = config.kommando;

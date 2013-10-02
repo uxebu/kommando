@@ -42,7 +42,7 @@ var defaultConfig = {
     globals: ['should', 'kommando'],
     ignoreLeaks: false,
     ui: 'bdd',
-    reporter: 'spec'
+    reporter: 'dot'
   },
   runnerModules: null,
   runnerKommandoGlobals: {}
