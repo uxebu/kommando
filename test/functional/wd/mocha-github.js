@@ -12,7 +12,7 @@ describe('wd / mocha', function() {
             done(error);
             return;
           }
-          heading.text(function(error, value) {
+          element.text(function(error, value) {
             expect(value).to.be('Build software better, together.');
             done(error);
           });
