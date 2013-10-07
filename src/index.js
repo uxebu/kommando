@@ -134,7 +134,9 @@ var runTests = function(
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
   var onExit = function(exitCode, signal) {
     if (exitCode) {
-      callback(new Error('Error occurred executing run-tests process.'));
+      callback(new Error('Error occurred executing run-tests process.'), {
+        passed: false
+      });
     }
   };
   child.send({
