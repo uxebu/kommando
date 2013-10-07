@@ -7,8 +7,7 @@ describe('selenium-webdriver / jasmine', function() {
         return heading.getText();
       }).then(function(text) {
         expect(text).toBe('Build software better, together.');
-        done();
-      });
+      }).then(done, done); // handle promise error / success within "it"
     });
   });
 });

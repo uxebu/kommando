@@ -9,8 +9,7 @@ describe('selenium-webdriver / jasmine', function() {
         });
       }).then(function(attribute) {
         expect(attribute).toBe('webdriver');
-        done();
-      });
+      }).then(done, done); // handle promise error / success within "it"
     });
   });
 });
