@@ -8,16 +8,20 @@ describe('wd / mocha', function() {
       browser.get('http://www.google.de', function() {
         browser.elementByName('q', function(error, element) {
           searchBox = element;
-          done();
+          done(error);
         });
       });
     });
   
     it('searches for "webdriver"', function(done) {
       searchBox.sendKeys('webdriver', function(error) {
+        if (error) {
+          done(error);
+          return;
+        }
         searchBox.getAttribute('value', function(error, value) {
           expect(value).to.be('webdriver');
-          done();
+          done(error);
         });
       });
     });
