@@ -1,4 +1,3 @@
-require("mocha-as-promised")();
 var expect = require('expect.js');
 
 describe('wd with promise / mocha', function() {
