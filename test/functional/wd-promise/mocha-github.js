@@ -1,3 +1,4 @@
+require("mocha-as-promised")();
 var expect = require('expect.js');
 
 describe('wd with promise / mocha', function() {
@@ -11,8 +12,7 @@ describe('wd with promise / mocha', function() {
         return heading.text();
       }).then(function(value) {
         expect(value).to.be('Build software better, together.');
-        done();
-      }).done();
+      }).then(done, done); // handle promise error / success within "it"
     });
   });
 });

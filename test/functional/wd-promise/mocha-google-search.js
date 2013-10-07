@@ -23,8 +23,7 @@ describe('wd with promise / mocha', function() {
         return searchBox.getAttribute('value');
       }).then(function(value) {
         expect(value).to.be('webdriver');
-        done();
-      }).done();
+      }).then(done, done); // handle promise error / success within "it"
     });
   });
 });
