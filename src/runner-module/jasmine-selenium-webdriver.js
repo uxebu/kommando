@@ -1,4 +1,6 @@
 /**
+* Copied from https://github.com/angular/protractor/tree/master/jasminewd (MIT licensed)
+*
 * Adapts Jasmine-Node tests to work better with WebDriverJS. Borrows
 * heavily from the mocha WebDriverJS adapter at
 * https://code.google.com/p/selenium/source/browse/javascript/node/selenium-webdriver/testing/index.js
@@ -91,7 +93,10 @@ function wrapMatcher(matcher, actualPromise) {
 */
 function promiseMatchers(actualPromise) {
   var promises = {};
-  for (var matcher in jasmine.Matchers.prototype) {
+  var env = jasmine.getEnv();
+  var matchersClass = env.currentSpec.matchersClass || env.matchersClass;
+
+  for (matcher in matchersClass.prototype) {
     promises[matcher] = wrapMatcher(matcher, actualPromise);
   }
 
