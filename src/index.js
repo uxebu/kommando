@@ -5,6 +5,7 @@ var async = require('async');
 var glob = require('glob');
 var lodash = require('lodash');
 
+var parentModuleDir = path.dirname(module.parent.filename);
 var defaultConfig = {
   browsers: ['phantomjs'],
   capabilities: [],
@@ -50,10 +51,13 @@ var defaultConfig = {
 
 var detectModulePath = function(moduleName, type) {
   var modulePath = path.join(__dirname, type, moduleName + '.js');
+  var relativeToParentPath = path.resolve(parentModuleDir, moduleName);
   if (fs.existsSync(modulePath)) {
     return modulePath;
   } else if (fs.existsSync(moduleName)) {
     return moduleName;
+  } else if (fs.existsSync(relativeToParentPath)) {
+    return relativeToParentPath;
   } else {
     throw new Error('The passed "' + type + '" module "' + moduleName + '" was not found.');
   }
@@ -82,6 +86,7 @@ var run = function(config, callback) {
 
   var tests = [];
   lodash.forEach(config.tests, function(test) {
+    test = path.resolve(parentModuleDir, test);
     var testFiles = glob.sync(test);
     if (testFiles.length === 0) {
       throw new Error('No files found for glob pattern: ' + test);
