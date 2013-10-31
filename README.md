@@ -58,7 +58,7 @@ describe('github', function() {
 You can invoke kommando either via command-line:
 
 ~~~bash
-// this will execute your test using PhantomJS (default)
+# this will execute your test using PhantomJS (default)
 kommando mytest.js
 ~~~
 
