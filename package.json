@@ -39,9 +39,9 @@
     "optimist": "~0.6.0",
     "phantomjs": "~1.9.1-0",
     "saucelabs": "~0.1.0",
-    "selenium-webdriver": "~2.34.0",
+    "selenium-webdriver": "~2.37.0",
     "wd": "~0.1.5",
-    "webdrvr": "~2.35.0-2"
+    "webdrvr": "~2.37.0-0"
   },
   "engines": {
     "node": ">=0.10"
