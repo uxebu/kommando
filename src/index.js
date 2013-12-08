@@ -158,7 +158,8 @@ var runTests = function(
   child.on('message', function(msg) {
     callback(null, {
       passed: msg.passed,
-      clientIds: msg.clientIds
+      clientIds: msg.clientIds,
+      data: msg.data
     });
     child.removeListener('exit', onExit);
   });

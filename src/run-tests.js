@@ -36,12 +36,13 @@ var runTests = function(config) {
       runnerOptions: config.runnerOptions,
       runnerModules: config.runnerModules,
       tests: config.tests
-    }).run(function(error, passed) {
+    }).run(function(error, passed, data) {
       var clientIds = Object.keys(client.clients);
       client.end(function() {
         process.send({
           passed: passed,
-          clientIds: clientIds
+          clientIds: clientIds,
+          data: data
         });
         if (error) {
           console.error(error.stack);
