@@ -21,7 +21,7 @@ var argv = optimist
     alias: 'b',
     type: 'string',
     desc: 'Browser(s) in which the tests should be executed',
-    default: 'phantomjs'
+    'default': 'phantomjs'
   })
   .option('driver', {
     alias: 'd',

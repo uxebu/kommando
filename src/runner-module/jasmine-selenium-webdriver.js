@@ -95,6 +95,7 @@ function promiseMatchers(actualPromise) {
   var promises = {};
   var env = jasmine.getEnv();
   var matchersClass = env.currentSpec.matchersClass || env.matchersClass;
+  var matcher;
 
   for (matcher in matchersClass.prototype) {
     promises[matcher] = wrapMatcher(matcher, actualPromise);
