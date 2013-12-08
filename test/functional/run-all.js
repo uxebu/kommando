@@ -24,6 +24,14 @@ var configSeleniumWebdriverJasmineWithHelper = {
   ]
 };
 
+var configPlainJasmine = {
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'selenium-webdriver', 'plain-github.js')
+  ],
+  runner: 'plain'
+};
+
 var configSeleniumWebdriverMochaWithHelper = {
   capabilities: capabilities,
   tests: [
@@ -69,13 +77,16 @@ run(configSeleniumWebdriverJasmine, function(error, results) {
   handleErrorCallback(error, results);
   run(configSeleniumWebdriverJasmineWithHelper, function(error, results) {
     handleErrorCallback(error, results);
-    run(configSeleniumWebdriverMochaWithHelper, function(error, results) {
+    run(configPlainJasmine, function(error, results) {
       handleErrorCallback(error, results);
-      run(configWdMocha, function(error, results) {
+      run(configSeleniumWebdriverMochaWithHelper, function(error, results) {
         handleErrorCallback(error, results);
-        run(configWdPromiseMocha, function(error, results) {
+        run(configWdMocha, function(error, results) {
           handleErrorCallback(error, results);
-          process.exit(0);
+          run(configWdPromiseMocha, function(error, results) {
+            handleErrorCallback(error, results);
+            process.exit(0);
+          });
         });
       });
     });
