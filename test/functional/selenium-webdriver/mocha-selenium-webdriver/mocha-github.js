@@ -1,13 +1,16 @@
-var expect = require('expect.js');
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+
+chai.use(chaiAsPromised);
+
+var expect = chai.expect;
 
 describe('selenium-webdriver / mocha / mocha-selenium-webdriver', function() {
   describe('github', function() {
     it('reads the "title"', function() {
       kommando.browser.get('https://www.github.com');
       var heading = kommando.browser.findElement(kommando.webdriver.By.className('heading'));
-      heading.getText().then(function(val) {
-        expect(val).to.be('Build software better, together.');
-      });
+      expect(heading.getText()).to.eventually.equal('Build software better, together.');
     });
   });
 });

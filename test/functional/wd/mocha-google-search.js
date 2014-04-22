@@ -1,4 +1,5 @@
-var expect = require('expect.js');
+var chai = require('chai');
+var expect = chai.expect;
 
 describe('wd / mocha', function() {
   describe('google-search', function() {
@@ -20,7 +21,7 @@ describe('wd / mocha', function() {
           return;
         }
         searchBox.getAttribute('value', function(error, value) {
-          expect(value).to.be('webdriver');
+          expect(value).to.equal('webdriver');
           done(error);
         });
       });

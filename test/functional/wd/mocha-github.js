@@ -1,4 +1,5 @@
-var expect = require('expect.js');
+var chai = require('chai');
+var expect = chai.expect;
 
 describe('wd / mocha', function() {
 
@@ -13,7 +14,7 @@ describe('wd / mocha', function() {
             return;
           }
           element.text(function(error, value) {
-            expect(value).to.be('Build software better, together.');
+            expect(value).to.equal('Build software better, together.');
             done(error);
           });
         });

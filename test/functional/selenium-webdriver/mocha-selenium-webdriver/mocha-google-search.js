@@ -1,4 +1,9 @@
-var expect = require('expect.js');
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+
+chai.use(chaiAsPromised);
+
+var expect = chai.expect;
 
 describe('selenium-webdriver / mocha / mocha-selenium-webdriver', function() {
   describe('google-search', function() {
@@ -6,9 +11,7 @@ describe('selenium-webdriver / mocha / mocha-selenium-webdriver', function() {
       kommando.browser.get('http://www.google.de');
       var searchBox = kommando.browser.findElement(kommando.webdriver.By.name('q'));
       searchBox.sendKeys('webdriver');
-      searchBox.getAttribute('value').then(function(val) {
-        expect(val).to.be('webdriver');
-      });
+      expect(searchBox.getAttribute('value')).to.eventually.equal('webdriver');
     });
   });
 });

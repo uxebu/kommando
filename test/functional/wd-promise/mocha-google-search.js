@@ -1,4 +1,5 @@
-var expect = require('expect.js');
+var chai = require('chai');
+var expect = chai.expect;
 
 describe('wd with promise / mocha', function() {
   describe('google-search', function() {
@@ -22,7 +23,7 @@ describe('wd with promise / mocha', function() {
       }).then(function(searchBox) {
         return searchBox.getAttribute('value');
       }).then(function(value) {
-        expect(value).to.be('webdriver');
+        expect(value).to.equal('webdriver');
       }).then(done, done); // handle promise error / success within "it"
     });
   });

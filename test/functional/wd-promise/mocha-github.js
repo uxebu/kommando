@@ -1,4 +1,5 @@
-var expect = require('expect.js');
+var chai = require('chai');
+var expect = chai.expect;
 
 describe('wd with promise / mocha', function() {
   describe('github', function() {
@@ -10,7 +11,7 @@ describe('wd with promise / mocha', function() {
       }).then(function(heading) {
         return heading.text();
       }).then(function(value) {
-        expect(value).to.be('Build software better, together.');
+        expect(value).to.equal('Build software better, together.');
       }).then(done, done); // handle promise error / success within "it"
     });
   });
