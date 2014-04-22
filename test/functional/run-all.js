@@ -4,8 +4,10 @@ var lodash = require('lodash');
 var run = require('../../src/index.js');
 
 var capabilities = [{browserName: 'phantomjs'}];
+var driver = 'phantomjs';
 
 var configSeleniumWebdriverJasmine = {
+  driver: driver,
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'selenium-webdriver', 'jasmine-github.js'),
@@ -14,6 +16,7 @@ var configSeleniumWebdriverJasmine = {
 };
 
 var configSeleniumWebdriverJasmineWithHelper = {
+  driver: driver,
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'selenium-webdriver', 'jasmine-selenium-webdriver', 'jasmine-github.js'),
@@ -25,6 +28,7 @@ var configSeleniumWebdriverJasmineWithHelper = {
 };
 
 var configPlainJasmine = {
+  driver: driver,
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'selenium-webdriver', 'plain-github.js')
@@ -33,6 +37,7 @@ var configPlainJasmine = {
 };
 
 var configSeleniumWebdriverMochaWithHelper = {
+  driver: driver,
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-github.js'),
@@ -48,6 +53,7 @@ var configSeleniumWebdriverMochaWithHelper = {
 };
 
 var configWdMocha = {
+  driver: driver,
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'wd', 'mocha-github.js'),
@@ -61,6 +67,7 @@ var configWdMocha = {
 };
 
 var configWdPromiseMocha = {
+  driver: driver,
   capabilities: capabilities,
   tests: [
     path.join(__dirname, 'wd-promise', 'mocha-github.js'),
