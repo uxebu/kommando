@@ -1,7 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('webdriver-http-sync / mocha', function() {
+describe('cabbie / mocha', function() {
   describe('github', function() {
     var browser = kommando.browser;
 

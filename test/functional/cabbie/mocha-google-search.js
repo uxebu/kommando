@@ -1,7 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('selenium-webdriver / mocha / mocha-selenium-webdriver', function() {
+describe('cabbie / mocha', function() {
   describe('google-search', function() {
     var browser = kommando.browser;
     
