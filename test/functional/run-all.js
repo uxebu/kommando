@@ -80,6 +80,21 @@ var configWdPromiseMocha = {
   client: 'wd-promise'
 };
 
+var configCabbieMocha = {
+  // executing with selenium because cabbie in combination with Ghostdriver
+  // currently fails with the initial session-request
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'cabbie', 'mocha-github.js'),
+    path.join(__dirname, 'cabbie', 'mocha-google-search.js')
+  ],
+  runner: 'mocha',
+  runnerOptions: {
+    reporter: 'spec'
+  },
+  client: 'cabbie'
+};
+
 run(configSeleniumWebdriverJasmine, function(error, results) {
   handleErrorCallback(error, results);
   run(configSeleniumWebdriverJasmineWithHelper, function(error, results) {
@@ -92,7 +107,10 @@ run(configSeleniumWebdriverJasmine, function(error, results) {
           handleErrorCallback(error, results);
           run(configWdPromiseMocha, function(error, results) {
             handleErrorCallback(error, results);
-            process.exit(0);
+            run(configCabbieMocha, function(error, results) {
+              handleErrorCallback(error, results);
+              process.exit(0);
+            });
           });
         });
       });
