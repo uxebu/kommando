@@ -1,3 +1,4 @@
+var async = require('async');
 var path = require('path');
 
 var lodash = require('lodash');
@@ -95,32 +96,26 @@ var configCabbieMocha = {
   client: 'cabbie'
 };
 
-run(configSeleniumWebdriverJasmine, function(error, results) {
-  handleErrorCallback(error, results);
-  run(configSeleniumWebdriverJasmineWithHelper, function(error, results) {
-    handleErrorCallback(error, results);
-    run(configPlainJasmine, function(error, results) {
-      handleErrorCallback(error, results);
-      run(configSeleniumWebdriverMochaWithHelper, function(error, results) {
-        handleErrorCallback(error, results);
-        run(configWdMocha, function(error, results) {
-          handleErrorCallback(error, results);
-          run(configWdPromiseMocha, function(error, results) {
-            handleErrorCallback(error, results);
-            run(configCabbieMocha, function(error, results) {
-              handleErrorCallback(error, results);
-              process.exit(0);
-            });
-          });
-        });
-      });
-    });
-  });
-});
-
-function handleErrorCallback(error, results) {
-  var passed = lodash.every(results, 'passed');
-  if (error || !passed) {
-    process.exit(1);
+async.series([
+  run.bind(null, configSeleniumWebdriverJasmine),
+  run.bind(null, configSeleniumWebdriverJasmineWithHelper),
+  run.bind(null, configPlainJasmine),
+  run.bind(null, configSeleniumWebdriverMochaWithHelper),
+  run.bind(null, configWdMocha),
+  run.bind(null, configWdPromiseMocha),
+  run.bind(null, configCabbieMocha)
+], function(error, results) {
+  var passed = lodash.every(lodash.map(results, function(result) {
+    return lodash.every(result, 'passed');
+  }));
+  if (!passed) {
+    error = new Error('One or more tests did not pass.');
   }
-}
+
+  if (error) {
+    console.error(error);
+    process.exit(1);
+  } else {
+    process.exit(0);
+  }
+});
