@@ -53,6 +53,32 @@ var configSeleniumWebdriverMochaWithHelper = {
   runner: 'mocha'
 };
 
+var configSeleniumWebdriverMochaWithHelper = {
+  driver: driver,
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-google-search.js')
+  ],
+  runnerModules: [
+    'mocha-selenium-webdriver'
+  ],
+  runnerOptions: {
+    reporter: 'dot'
+  },
+  runner: 'mocha'
+};
+
+var configSeleniumWebdriverCucumber = {
+  driver: driver,
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'selenium-webdriver', 'cucumber', 'cucumber-github.feature')
+  ],
+  runner: 'cucumber',
+  runnerOptions: {}
+};
+
 var configWdMocha = {
   driver: driver,
   capabilities: capabilities,
@@ -101,6 +127,7 @@ async.series([
   run.bind(null, configSeleniumWebdriverJasmineWithHelper),
   run.bind(null, configPlainJasmine),
   run.bind(null, configSeleniumWebdriverMochaWithHelper),
+  run.bind(null, configSeleniumWebdriverCucumber),
   run.bind(null, configWdMocha),
   run.bind(null, configWdPromiseMocha),
   run.bind(null, configCabbieMocha)

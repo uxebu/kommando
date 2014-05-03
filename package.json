@@ -33,6 +33,7 @@
     "cabbie": "0.0.9",
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
+    "cucumber": "^0.4.0",
     "freeport": "~1.0.2",
     "glob": "~3.2.6",
     "jasmine-node": "~1.10.2",
