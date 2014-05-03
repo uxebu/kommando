@@ -11,11 +11,12 @@ your created tests on an existing [Selenium Grid](http://code.google.com/p/selen
 (including [SauceLabs](http://saucelabs.com/)).
 
 For each test launch you can configure a test-runner that should be used to execute tests (currently
-[jasmine-node](https://npmjs.org/package/jasmine-node) or [mocha](https://npmjs.org/package/mocha))
-and you can tell which Webdriver JS lib should be used to create a Webdriver client session (e.g.
-[selenium-webdriver](https://npmjs.org/package/selenium-webdriver) or
-[wd](https://npmjs.org/package/wd)) per browser. The configured Webdriver client session then gets
-injected into the test runner execution context and can then be used there.
+[jasmine-node](https://npmjs.org/package/jasmine-node), [mocha](https://npmjs.org/package/mocha)) or
+[cucumber](https://npmjs.org/package/cucumber) and you can tell which Webdriver JS lib should be 
+used to create a Webdriver client session (e.g.
+[selenium-webdriver](https://npmjs.org/package/selenium-webdriver), [wd](https://npmjs.org/package/wd))
+or [cabbie](https://www.npmjs.org/package/cabbie) per browser. The configured Webdriver client
+session then gets injected into the test runner execution context and can then be used there.
 
 This project is aimed for finding the best suited approach to write your functional cross browser
 tests using JavaScript by allowing you to choose a test style (jasmine, mocha) you already are
@@ -32,6 +33,23 @@ contains runner modules that tie the test runner to the control-flow of this pro
 
 ~~~bash
 npm install kommando -g
+~~~
+
+## Executing REPL
+
+Kommando provides a REPL runner which you can use to play with an individual Webdriver library.
+
+~~~bash
+# REPL with selenium-webdriver library and phantomjs
+kommando --runner repl
+# REPL with selenium-webdriver library and chrome
+kommando --runner repl --browser chrome
+# REPL with cabbie
+kommando --runner repl --browser chrome --client cabbie
+# REPL with wd
+kommando --runner repl --browser chrome --client wd
+# REPL with wd-promise
+kommando --runner repl --browser chrome --client wd-promise
 ~~~
 
 ## Writing your first functionl test for kommando
