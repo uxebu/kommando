@@ -10,7 +10,9 @@ module.exports = function(seleniumUrl) {
 
       client.init(capabilities, function(error, sessionId) {
         this.clients[sessionId] = client;
-        callback(error, client, {});
+        if (typeof callback === 'function') {
+          callback(error, client, {});
+        }
       }.bind(this));
     },
     end: function(callback) {

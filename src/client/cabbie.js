@@ -7,9 +7,14 @@ module.exports = function(seleniumUrl) {
       try {
         var client = new cabbie(seleniumUrl, capabilities, {mode: 'sync'});
         this.clients[client.getSessionID()] = client;
-        callback(null, client, {});
+        if (typeof callback === 'function') {
+          callback(null, client, {});
+        }
+        return client;
       } catch(error) {
-        callback(error);
+        if (typeof callback === 'function') {
+          callback(error);
+        }
       }
     },
     end: function(callback) {

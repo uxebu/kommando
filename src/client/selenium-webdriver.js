@@ -12,11 +12,15 @@ module.exports = function(seleniumUrl) {
 
       client.getSession().then(function(session) {
         this.clients[session.getId()] = client;
-        callback(null, client, {
-          webdriver: webdriver
-        });
+        if (typeof callback === 'function') {
+          callback(null, client, {
+            webdriver: webdriver
+          });
+        }
       }.bind(this)).then(null, function(error) {
-        callback(error);
+        if (typeof callback === 'function') {
+          callback(error);
+        }
       });
     },
     end: function(callback) {
