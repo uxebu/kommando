@@ -145,7 +145,7 @@ lodash.merge(kommandoConfig, {
   tests: argv._
 });
 
-if (kommandoConfig.tests.length < 1) {
+if (kommandoConfig.runner !== 'repl' && kommandoConfig.tests.length < 1) {
   optimist.showHelp();
   console.log('Pass at least one test file.');
   process.exit(1);

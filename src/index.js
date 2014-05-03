@@ -94,7 +94,7 @@ var run = function(config, callback) {
     tests = tests.concat(testFiles);
   });
 
-  if (tests.length === 0) {
+  if (config.runner !== 'repl' && tests.length === 0) {
     throw new Error('No test files found.');
   }
 
