@@ -13,8 +13,8 @@ var configSeleniumWebdriverJasmine = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'selenium-webdriver', 'jasmine-github.js'),
-    path.join(__dirname, 'selenium-webdriver', 'jasmine-google-search.js')
+    path.join(__dirname, 'selenium-webdriver', 'jasmine', 'github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'jasmine', 'google-search.js')
   ]
 };
 
@@ -22,8 +22,8 @@ var configSeleniumWebdriverJasmineWithHelper = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'selenium-webdriver', 'jasmine-selenium-webdriver', 'jasmine-github.js'),
-    path.join(__dirname, 'selenium-webdriver', 'jasmine-selenium-webdriver', 'jasmine-google-search.js')
+    path.join(__dirname, 'selenium-webdriver', 'jasmine-with-helper', 'github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'jasmine-with-helper', 'google-search.js')
   ],
   runnerModules: [
     'jasmine-selenium-webdriver'
@@ -34,7 +34,7 @@ var configPlainJasmine = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'selenium-webdriver', 'plain-github.js')
+    path.join(__dirname, 'selenium-webdriver', 'plain', 'github.js')
   ],
   runner: 'plain'
 };
@@ -43,24 +43,8 @@ var configSeleniumWebdriverMochaWithHelper = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-github.js'),
-    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-google-search.js')
-  ],
-  runnerModules: [
-    'mocha-selenium-webdriver'
-  ],
-  runnerOptions: {
-    reporter: 'dot'
-  },
-  runner: 'mocha'
-};
-
-var configSeleniumWebdriverMochaWithHelper = {
-  driver: driver,
-  capabilities: capabilities,
-  tests: [
-    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-github.js'),
-    path.join(__dirname, 'selenium-webdriver', 'mocha-selenium-webdriver', 'mocha-google-search.js')
+    path.join(__dirname, 'selenium-webdriver', 'mocha-with-helper', 'github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'mocha-with-helper', 'google-search.js')
   ],
   runnerModules: [
     'mocha-selenium-webdriver'
@@ -75,7 +59,7 @@ var configSeleniumWebdriverCucumber = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'selenium-webdriver', 'cucumber', 'cucumber-github.feature')
+    path.join(__dirname, 'selenium-webdriver', 'cucumber', 'github.feature')
   ],
   runner: 'cucumber',
   runnerOptions: {}
@@ -85,8 +69,8 @@ var configWdMocha = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'wd', 'mocha-github.js'),
-    path.join(__dirname, 'wd', 'mocha-google-search.js')
+    path.join(__dirname, 'wd', 'mocha', 'github.js'),
+    path.join(__dirname, 'wd', 'mocha', 'google-search.js')
   ],
   runner: 'mocha',
   runnerOptions: {
@@ -99,8 +83,8 @@ var configWdPromiseMocha = {
   driver: driver,
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'wd-promise', 'mocha-github.js'),
-    path.join(__dirname, 'wd-promise', 'mocha-google-search.js')
+    path.join(__dirname, 'wd-promise', 'mocha', 'github.js'),
+    path.join(__dirname, 'wd-promise', 'mocha', 'google-search.js')
   ],
   runner: 'mocha',
   runnerOptions: {
@@ -114,8 +98,8 @@ var configCabbieMocha = {
   // currently fails with the initial session-request
   capabilities: capabilities,
   tests: [
-    path.join(__dirname, 'cabbie', 'mocha-github.js'),
-    path.join(__dirname, 'cabbie', 'mocha-google-search.js')
+    path.join(__dirname, 'cabbie', 'mocha', 'github.js'),
+    path.join(__dirname, 'cabbie', 'mocha', 'google-search.js')
   ],
   runner: 'mocha',
   runnerOptions: {
