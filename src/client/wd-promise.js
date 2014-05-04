@@ -13,7 +13,9 @@ module.exports = function(seleniumUrl) {
       client.init(capabilities, function(error, sessionId) {
         this.clients[sessionId] = client;
         if (typeof callback === 'function') {
-          callback(error, client, {});
+          callback(error, client, {
+            wd: wd
+          });
         }
       }.bind(this));
     },

@@ -13,7 +13,7 @@ describe('wd with promise / mocha', function() {
       }).then(function(searchBox) {
         // creating own deferred because searchBox.sendKeys
         // does not return a promise
-        var deferred = browser.Q.defer();
+        var deferred = kommando.wd.Q.defer();
         searchBox.sendKeys('webdriver', function(error) {
           if (error) {
             deferred.reject(error);
