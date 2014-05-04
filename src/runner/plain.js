@@ -15,7 +15,7 @@ module.exports = function(config) {
       var testFunction = function(test, callback) {
         try {
           require(test)(callback);
-        } catch(e) {
+        } catch (e) {
           callback(e);
         }
       };

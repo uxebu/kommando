@@ -1,6 +1,6 @@
 'use strict';
 
-var nesh = require("nesh");
+var nesh = require('nesh');
 
 module.exports = function(config) {
   global.kommando = config.kommando;
@@ -13,7 +13,7 @@ module.exports = function(config) {
     run: function(callback) {
       nesh.config.load();
       nesh.start({
-        prompt: "kommando> ",
+        prompt: 'kommando> ',
         input: process.stdin,
         output: process.stdout,
         historyFile: process.env.HOME + '/.kommando_history'

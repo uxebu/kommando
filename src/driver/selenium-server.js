@@ -22,7 +22,7 @@ module.exports = function(options) {
         var args = ['-jar', webdrvr.selenium.path, '-port', port]
           .concat(webdrvr.args)
           .concat(options.args || []);
-        
+
         var driverLauncherOptions = {
           args: args,
           hostname: address.ip() || address.ip('lo'),

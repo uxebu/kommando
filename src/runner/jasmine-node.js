@@ -33,7 +33,7 @@ module.exports = function(config) {
         teamcity: false,
         junitreport: {
           report: false,
-          savePath : "./reports/",
+          savePath : './reports/',
           useDotNotation: true,
           consolidate: true
         }

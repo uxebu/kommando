@@ -21,7 +21,7 @@
   },
   "scripts": {
     "test": "node ./test/functional/run-all.js",
-    "lint": "jshint src test"
+    "lint": "jshint src test && jscs src test"
   },
   "author": {
     "name": "Tobias von Klipstein",
@@ -49,5 +49,9 @@
   },
   "engines": {
     "node": ">=0.10"
+  },
+  "devDependencies": {
+    "jscs": "^1.4.0",
+    "jshint": "^2.5.0"
   }
 }

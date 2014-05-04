@@ -19,7 +19,7 @@ var defaultOptions = {
 };
 
 module.exports = function(executable, options) {
-  
+
   var processOptions = lodash.merge({}, defaultOptions, options);
 
   return {

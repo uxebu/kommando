@@ -21,7 +21,7 @@ module.exports = function(options) {
       freeport(function(err, port) {
         var args = ['--webdriver=' + port]
           .concat(options.args || []);
-        
+
         var driverLauncherOptions = {
           args: args,
           hostname: address.ip() || address.ip('lo'),

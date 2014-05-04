@@ -13,7 +13,7 @@ module.exports = function(seleniumUrl) {
           callback(null, client, {});
         }
         return client;
-      } catch(error) {
+      } catch (error) {
         if (typeof callback === 'function') {
           callback(error);
         }
@@ -21,7 +21,7 @@ module.exports = function(seleniumUrl) {
     },
     end: function(callback) {
       var client;
-      
+
       try {
         for (var id in this.clients) {
           client = this.clients[id];
@@ -29,7 +29,7 @@ module.exports = function(seleniumUrl) {
           client.dispose();
         }
         callback();
-      } catch(error) {
+      } catch (error) {
         callback(error);
       }
     }

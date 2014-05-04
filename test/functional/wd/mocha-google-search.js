@@ -15,7 +15,7 @@ describe('wd / mocha', function() {
         });
       });
     });
-  
+
     it('searches for "webdriver"', function(done) {
       searchBox.sendKeys('webdriver', function(error) {
         if (error) {
