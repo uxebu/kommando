@@ -1,3 +1,5 @@
+'use strict';
+
 describe('selenium-webdriver / jasmine', function() {
   describe('google-search', function() {
     it('searches for "webdriver"', function(done) {

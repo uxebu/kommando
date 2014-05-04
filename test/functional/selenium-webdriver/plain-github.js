@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(callback) {
   kommando.browser.get('https://www.github.com').then(function() {
     return kommando.browser.findElement(kommando.webdriver.By.className('heading'));

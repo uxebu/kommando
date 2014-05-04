@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('async');
 var url = require('url');
 var wd = require('wd');

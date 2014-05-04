@@ -1,3 +1,5 @@
+'use strict';
+
 describe('selenium-webdriver / jasmine', function() {
   describe('github', function() {
     it('reads the "title"', function(done) {

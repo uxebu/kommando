@@ -1,3 +1,5 @@
+'use strict';
+
 var jasmine = require('jasmine-node');
 var lodash = require('lodash');
 
@@ -17,7 +19,7 @@ module.exports = function(config) {
   });
   return {
     run: function(callback) {
-      var onComplete = function(runner, log) {
+      var onComplete = function(runner) {
         var passed = false;
         if (runner.results().failedCount === 0) {
           passed = true;

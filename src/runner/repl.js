@@ -1,7 +1,6 @@
-var nesh = require("nesh");
+'use strict';
 
-var async = require('async');
-var lodash = require('lodash');
+var nesh = require("nesh");
 
 module.exports = function(config) {
   global.kommando = config.kommando;
@@ -23,7 +22,7 @@ module.exports = function(config) {
           callback(err, true, []);
         }
         repl.on('exit', function() {
-          callback(null, true, []);;
+          callback(null, true, []);
         });
       });
     }

@@ -1,3 +1,5 @@
+'use strict';
+
 var cabbie = require('cabbie');
 
 module.exports = function(seleniumUrl) {

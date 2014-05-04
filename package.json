@@ -20,7 +20,8 @@
     "kommando": "./bin/kommando"
   },
   "scripts": {
-    "test": "node ./test/functional/run-all.js"
+    "test": "node ./test/functional/run-all.js",
+    "lint": "jshint src test"
   },
   "author": {
     "name": "Tobias von Klipstein",

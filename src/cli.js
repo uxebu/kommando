@@ -1,3 +1,5 @@
+'use strict';
+
 var lodash = require('lodash');
 var optimist = require('optimist');
 var path = require('path');
@@ -117,7 +119,6 @@ var driverOptions = collectArgsWithPrefix(argv, 'driver-option-');
 var runnerOptions = collectArgsWithPrefix(argv, 'runner-option-');
 var runnerKommandoGlobals = collectArgsWithPrefix(argv, 'runner-global-');
 var runnerModules = convertArgToArray(argv, 'runner-module');
-var sauceTags = convertArgToArray(argv, 'sauce-tag');
 
 // read config when it was passed
 var kommandoConfig = argv.config ? require(path.resolve(argv.config)) : {};

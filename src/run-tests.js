@@ -1,3 +1,5 @@
+'use strict';
+
 var lodash = require('lodash');
 
 process.on('message', function(config) {

@@ -1,3 +1,5 @@
+'use strict';
+
 var lodash = require('lodash');
 var Mocha = require('mocha');
 
@@ -16,7 +18,7 @@ module.exports = function(config) {
   mochaInstance = new Mocha(options);
   mochaInstance.suite.title = config.kommando.capabilitiesName;
 
-  mochaInstance.suite.on('pre-require', function(context, file, mocha) {
+  mochaInstance.suite.on('pre-require', function() {
     config.runnerModules.forEach(function(runnerModule) {
       // ensure that we reload every runner-module per spec
       delete require.cache[require.resolve(runnerModule)];

@@ -1,3 +1,5 @@
+/* jshint ignore:start */
+
 // Copyright 2013 Selenium committers
 // Copyright 2013 Software Freedom Conservancy
 //
@@ -241,3 +243,4 @@ for (var key in exports) {
 }
 
 global.it.only = global.iit = originalOnly;
+/* jshint ignore:end */

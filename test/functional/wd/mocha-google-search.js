@@ -1,3 +1,5 @@
+'use strict';
+
 var chai = require('chai');
 var expect = chai.expect;
 
@@ -5,7 +7,7 @@ describe('wd / mocha', function() {
   describe('google-search', function() {
     var browser = kommando.browser;
     var searchBox;
-    before(function(done) {
+    beforeEach(function(done) {
       browser.get('http://www.google.de', function() {
         browser.elementByName('q', function(error, element) {
           searchBox = element;

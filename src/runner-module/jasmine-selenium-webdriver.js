@@ -1,3 +1,5 @@
+/* jshint ignore:start */
+
 /**
  * Copied from https://github.com/angular/protractor/tree/master/jasminewd (MIT licensed)
  *
@@ -288,3 +290,5 @@ OnTimeoutReporter.prototype.log = function() {};
 jasmine.getEnv().addReporter(new OnTimeoutReporter(function() {
   flow.reset();
 }));
+
+/* jshint ignore:end */

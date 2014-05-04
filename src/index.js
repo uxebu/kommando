@@ -1,3 +1,5 @@
+'use strict';
+
 var fs = require('fs');
 var path = require('path');
 
@@ -137,7 +139,7 @@ var runTests = function(
   var capabilitiesName = flattenCapabilities(capabilities);
   console.log('Run tests using "' + capabilitiesName + '"');
   var child = require('child_process').fork(path.join(__dirname, 'run-tests.js'));
-  var onExit = function(exitCode, signal) {
+  var onExit = function(exitCode) {
     if (exitCode) {
       callback(new Error('Error occurred executing run-tests process.'), {
         passed: false

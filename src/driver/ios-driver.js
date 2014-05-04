@@ -1,3 +1,5 @@
+'use strict';
+
 var driverLauncher = require('../driver-launcher.js');
 
 var address = require('address');

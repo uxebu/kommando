@@ -1,5 +1,6 @@
+'use strict';
+
 var async = require('async');
-var lodash = require('lodash');
 
 module.exports = function(config) {
   global.kommando = config.kommando;

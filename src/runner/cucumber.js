@@ -1,9 +1,10 @@
-var lodash = require('lodash');
-var Cucumber = require('cucumber')
+'use strict';
+
+var Cucumber = require('cucumber');
 
 module.exports = function(config) {
   var cucumber;
-  var execOptions = ['node', 'node_modules/.bin/cucumber-js']
+  var execOptions = ['node', 'node_modules/.bin/cucumber-js'];
   var runnerOptions = config.runnerOptions;
 
   global.kommando = config.kommando;
