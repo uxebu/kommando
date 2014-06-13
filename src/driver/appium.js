@@ -16,10 +16,10 @@ module.exports = function(options) {
       var updatedCaps = caps;
       if (['ipad', 'iphone'].indexOf(caps.browserName) > -1) {
         updatedCaps = lodash.merge({}, {
-          device: caps.browserName,
-          app: 'safari',
-          version: '6.1'
-        }, caps);
+          platformName: 'iOS',
+          browserName: 'Safari',
+          deviceName: caps.browserName + ' Simulator'
+        });
       }
       return updatedCaps;
     },
