@@ -8,7 +8,7 @@ describe('wd with promise / mocha', function() {
   describe('github', function() {
     var command;
     beforeEach(function() {
-      command = new leadfootCommand(kommando.browser)
+      command = new leadfootCommand(kommando.browser);
     });
 
     it('reads the "title"', function(done) {
