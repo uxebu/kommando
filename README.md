@@ -15,7 +15,7 @@ For each test launch you can configure a test-runner that should be used to exec
 [cucumber](https://npmjs.org/package/cucumber) and you can tell which Webdriver JS lib should be 
 used to create a Webdriver client session (e.g.
 [selenium-webdriver](https://npmjs.org/package/selenium-webdriver), [leadfoot](https://github.com/theintern/leadfoot),
-[wd](https://npmjs.org/package/wd)) or [cabbie](https://www.npmjs.org/package/cabbie) per browser. 
+[wd](https://npmjs.org/package/wd) or [cabbie](https://www.npmjs.org/package/cabbie)) per browser. 
 The configured Webdriver client session then gets injected into the test runner execution context and
 can then be used there.
 
