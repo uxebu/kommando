@@ -45,7 +45,8 @@
     "saucelabs": "~0.1.0",
     "selenium-webdriver": "~2.41.0",
     "wd": "~0.2.19",
-    "webdrvr": "~2.41.0-0"
+    "webdrvr": "~2.41.0-0",
+    "leadfoot": "^1.0.1"
   },
   "engines": {
     "node": ">=0.10"

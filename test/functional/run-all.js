@@ -108,6 +108,19 @@ var configCabbieMocha = {
   client: 'cabbie'
 };
 
+var configLeadfootMocha = {
+  capabilities: [{browserName: 'chrome'}],
+  tests: [
+    path.join(__dirname, 'leadfoot', 'mocha', 'github.js'),
+    path.join(__dirname, 'leadfoot', 'mocha', 'google-search.js')
+  ],
+  runner: 'mocha',
+  runnerOptions: {
+    reporter: 'spec'
+  },
+  client: 'leadfoot'
+};
+
 async.series([
   run.bind(null, configSeleniumWebdriverJasmine),
   run.bind(null, configSeleniumWebdriverJasmineWithHelper),
@@ -116,7 +129,8 @@ async.series([
   run.bind(null, configSeleniumWebdriverCucumber),
   run.bind(null, configWdMocha),
   run.bind(null, configWdPromiseMocha),
-  run.bind(null, configCabbieMocha)
+  run.bind(null, configCabbieMocha),
+  run.bind(null, configLeadfootMocha)
 ], function(error, results) {
   var passed = lodash.every(lodash.map(results, function(result) {
     return lodash.every(result, 'passed');
