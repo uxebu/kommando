@@ -109,7 +109,7 @@ var configCabbieMocha = {
 };
 
 var configLeadfootMocha = {
-  capabilities: [{browserName: 'chrome'}],
+  capabilities: capabilities,
   tests: [
     path.join(__dirname, 'leadfoot', 'mocha', 'github.js'),
     path.join(__dirname, 'leadfoot', 'mocha', 'google-search.js')
