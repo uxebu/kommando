@@ -52,7 +52,7 @@
     "node": ">=0.10"
   },
   "devDependencies": {
-    "jscs": "^1.4.0",
+    "jscs": "~1.5.8",
     "jshint": "^2.5.0"
   }
 }
