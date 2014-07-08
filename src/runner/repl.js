@@ -16,6 +16,7 @@ module.exports = function(config) {
         prompt: 'kommando> ',
         input: process.stdin,
         output: process.stdout,
+        welcome: '"kommando" / "kommando.browser" provide access to the running browser instance',
         historyFile: process.env.HOME + '/.kommando_history'
       }, function(err, repl) {
         if (err) {
