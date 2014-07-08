@@ -11,11 +11,7 @@ module.exports = function(options) {
   return {
     _tunnel: null,
     updateCapabilities: function(caps) {
-      return lodash.merge({
-        name: options.sauceName,
-        build: options.sauceBuild,
-        tags: options.sauceTags
-      }, this._tunnel.extraCapabilities, caps);
+      return lodash.merge({}, this._tunnel.extraCapabilities, caps);
     },
     start: function(callback) {
       var tunnel = this._tunnel = new DigdugSauceLabsTunnel({
@@ -35,7 +31,12 @@ module.exports = function(options) {
       var tunnel = this._tunnel;
       results.forEach(function(result) {
         result.clientIds.forEach(function(clientId) {
-          sendJobStates.push(tunnel.sendJobState(clientId, {passed: result.passed}));
+          sendJobStates.push(tunnel.sendJobState(clientId, {
+            success: result.passed,
+            name: options.name,
+            buildId: options.buildId,
+            tags: options.tags
+          }));
         });
       });
       Promise.all(sendJobStates).then(function() {
