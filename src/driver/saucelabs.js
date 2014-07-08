@@ -2,58 +2,45 @@
 
 var url = require('url');
 
-var async = require('async');
 var lodash = require('lodash');
-var SauceLabs = require('saucelabs');
+var Promise = require('digdug/node_modules/dojo/Promise');
+var DigdugSauceLabsTunnel = require('digdug/SauceLabsTunnel');
 
 module.exports = function(options) {
 
-  var sauceAccount = null;
-
   return {
+    _tunnel: null,
     updateCapabilities: function(caps) {
-      return lodash.merge({}, {
-        username: options.sauceUser,
-        accessKey: options.sauceKey,
+      return lodash.merge({
         name: options.sauceName,
         build: options.sauceBuild,
         tags: options.sauceTags
-      }, caps);
+      }, this._tunnel.extraCapabilities, caps);
     },
     start: function(callback) {
-      sauceAccount = new SauceLabs({
+      var tunnel = this._tunnel = new DigdugSauceLabsTunnel({
+        accessKey: options.sauceKey,
         username: options.sauceUser,
-        password: options.sauceKey
+        tunnelId: +new Date()
       });
-
-      var seleniumUrl = {
-        protocol: 'http',
-        hostname: 'ondemand.saucelabs.com',
-        port: 80,
-        pathname: '/wd/hub'
-      };
-
-      console.log('Using SauceLabs selenium server at: ' + url.format(seleniumUrl));
-
-      seleniumUrl.auth = options.sauceUser + ':' + options.sauceKey;
-      seleniumUrl = url.format(seleniumUrl);
-
-      callback(null, seleniumUrl);
-    },
-    stop: function(results, callback) {
-      var sauceUpdateFunctions = [];
-      results.forEach(function(result) {
-        result.clientIds.forEach(function(clientId) {
-          sauceUpdateFunctions.push(
-            sauceAccount.updateJob.bind(
-              sauceAccount, clientId, {passed: result.passed}
-            )
-          );
-        });
-      });
-      async.series(sauceUpdateFunctions, function(error) {
+      tunnel.start().then(function(error) {
+        console.log('Using SauceLabs selenium server at: ' + tunnel.clientUrl);
+        callback(null, tunnel.clientUrl);
+      }, function(error) {
         callback(error);
       });
+    },
+    stop: function(results, callback) {
+      var sendJobStates = [];
+      var tunnel = this._tunnel;
+      results.forEach(function(result) {
+        result.clientIds.forEach(function(clientId) {
+          sendJobStates.push(tunnel.sendJobState(clientId, {passed: result.passed}));
+        });
+      });
+      Promise.all(sendJobStates).then(function() {
+        return tunnel.stop();
+      }).then(callback, callback);
     }
   };
 

@@ -46,7 +46,8 @@
     "selenium-webdriver": "~2.41.0",
     "wd": "~0.2.19",
     "webdrvr": "~2.41.0-0",
-    "leadfoot": "^1.0.1"
+    "leadfoot": "^1.0.1",
+    "digdug": "^1.0.0"
   },
   "engines": {
     "node": ">=0.10"
