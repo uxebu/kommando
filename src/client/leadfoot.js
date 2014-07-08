@@ -1,6 +1,7 @@
 'use strict';
 
 var Promise = require('leadfoot/node_modules/dojo/Promise');
+var leadfootCommand = require('leadfoot/Command');
 var leadfootServer = require('leadfoot/Server');
 
 module.exports = function(seleniumUrl) {
@@ -11,7 +12,9 @@ module.exports = function(seleniumUrl) {
       var server = this.server = new leadfootServer(seleniumUrl);
       server.createSession(capabilities).then(function(client) {
         this.clients[client.sessionId] = client;
-        callback(null, client, {});
+        callback(null, client, {
+          command: new leadfootCommand(client)
+        });
       }.bind(this), callback);
     },
     end: function(callback) {
