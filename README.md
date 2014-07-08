@@ -45,6 +45,8 @@ Kommando provides a REPL runner which you can use to play with an individual Web
 kommando --runner repl
 # REPL with selenium-webdriver library and chrome
 kommando --runner repl --browser chrome
+# REPL with leadfoot
+kommando --runner repl --browser chrome --client leadfoot
 # REPL with cabbie
 kommando --runner repl --browser chrome --client cabbie
 # REPL with wd
