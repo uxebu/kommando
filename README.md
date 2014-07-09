@@ -8,7 +8,8 @@ kommando is a configurable cross browser functional / acceptance test launcher
 It helps you to get started writing functional cross browser tests using JavaScript without knowing
 details how to properly setup the various Webdriver servers locally, while still allowing to run
 your created tests on an existing [Selenium Grid](http://code.google.com/p/selenium/wiki/Grid2)
-(including [SauceLabs](http://saucelabs.com/)).
+(including [SauceLabs](http://saucelabs.com/), [BrowserStack](http://browserstack.com/) or
+[TestingBot](http://testingbot.com/)).
 
 For each test launch you can configure a test-runner that should be used to execute tests (currently
 [jasmine-node](https://npmjs.org/package/jasmine-node), [mocha](https://npmjs.org/package/mocha)) or
