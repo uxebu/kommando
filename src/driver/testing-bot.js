@@ -16,7 +16,7 @@ module.exports = function(options) {
   return {
     _tunnel: null,
     updateCapabilities: function(caps) {
-      return lodash.merge({}, this._tunnel.extraCapabilities, caps);
+      return merge({}, this._tunnel.extraCapabilities, caps);
     },
     start: function(callback) {
       var tunnel = this._tunnel = new DigdugTestingBotTunnel(merge({
@@ -34,12 +34,9 @@ module.exports = function(options) {
       var tunnel = this._tunnel;
       results.forEach(function(result) {
         (result.clientIds || []).forEach(function(clientId) {
-          sendJobStates.push(tunnel.sendJobState(clientId, {
-            success: result.passed,
-            name: jobState.name,
-            buildId: jobState.buildId,
-            tags: jobState.tags
-          }));
+          sendJobStates.push(tunnel.sendJobState(clientId, merge({
+            success: result.passed
+          }, jobState)));
         });
       });
       Promise.all(sendJobStates).then(function() {
