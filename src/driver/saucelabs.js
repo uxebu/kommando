@@ -6,19 +6,22 @@ var lodash = require('lodash');
 var Promise = require('digdug/node_modules/dojo/Promise');
 var DigdugSauceLabsTunnel = require('digdug/SauceLabsTunnel');
 
+var merge = lodash.merge;
+
 module.exports = function(options) {
+
+  var jobState = options.jobState;
+  delete options.jobState;
 
   return {
     _tunnel: null,
     updateCapabilities: function(caps) {
-      return lodash.merge({}, this._tunnel.extraCapabilities, caps);
+      return merge({}, this._tunnel.extraCapabilities, caps);
     },
     start: function(callback) {
-      var tunnel = this._tunnel = new DigdugSauceLabsTunnel({
-        accessKey: options.sauceKey,
-        username: options.sauceUser,
-        tunnelId: +new Date()
-      });
+      var tunnel = this._tunnel = new DigdugSauceLabsTunnel(merge({
+        tunnelId: Date.now()
+      }, options));
       tunnel.start().then(function(error) {
         console.log('Using SauceLabs selenium server at: ' + tunnel.clientUrl);
         callback(null, tunnel.clientUrl);
@@ -30,12 +33,12 @@ module.exports = function(options) {
       var sendJobStates = [];
       var tunnel = this._tunnel;
       results.forEach(function(result) {
-        result.clientIds.forEach(function(clientId) {
+        (result.clientIds || []).forEach(function(clientId) {
           sendJobStates.push(tunnel.sendJobState(clientId, {
             success: result.passed,
-            name: options.name,
-            buildId: options.buildId,
-            tags: options.tags
+            name: jobState.name,
+            buildId: jobState.buildId,
+            tags: jobState.tags
           }));
         });
       });
