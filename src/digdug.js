@@ -1,7 +1,5 @@
 'use strict';
 
-var url = require('url');
-
 var lodash = require('lodash');
 var Promise = require('digdug/node_modules/dojo/Promise');
 
@@ -21,7 +19,7 @@ module.exports = function(tunnelName, DigDugTunnel, options) {
       var tunnel = this._tunnel = new DigDugTunnel(merge({
         tunnelId: Date.now()
       }, options));
-      tunnel.start().then(function(error) {
+      tunnel.start().then(function() {
         console.log('Using ' + tunnelName + ' selenium server at: ' + tunnel.clientUrl);
         callback(null, tunnel.clientUrl);
       }, function(error) {
