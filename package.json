@@ -9,7 +9,7 @@
     "functional",
     "acceptance"
   ],
-  "version": "0.0.12",
+  "version": "0.0.13",
   "homepage": "https://github.com/uxebu/kommando",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "cucumber": "^0.4.0",
     "freeport": "~1.0.2",
     "glob": "~3.2.6",
-    "jasmine-node": "1.14.1",
+    "jasmine-node": "~1.14.5",
     "lodash": "~2.4.1",
     "mocha": "~1.18.2",
     "nesh": "^1.5.0",
