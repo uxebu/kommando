@@ -1,6 +1,6 @@
 'use strict';
 
-var Promise = require('leadfoot/node_modules/dojo/Promise');
+var promise = require('leadfoot/node_modules/dojo/Promise');
 var leadfootCommand = require('leadfoot/Command');
 var leadfootServer = require('leadfoot/Server');
 
@@ -24,7 +24,7 @@ module.exports = function(seleniumUrl) {
         allDeleteSession.push(server.deleteSession(id));
         delete this.clients[id];
       }
-      Promise.all(allDeleteSession).then(callback);
+      promise.all(allDeleteSession).then(callback);
     }
   };
 };
