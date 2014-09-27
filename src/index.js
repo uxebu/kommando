@@ -15,14 +15,15 @@ var defaultConfig = {
   driver: 'selenium-server',
   driverOptions: {
     args: [],
-    port: 0,
-    hostname: '',
     stdio: 'inherit',
-    sauceUser: process.env.SAUCE_USERNAME,
-    sauceKey: process.env.SAUCE_ACCESS_KEY,
-    sauceName: undefined,
-    sauceBuild: undefined,
-    sauceTags: undefined,
+    username: undefined,
+    accessKey: undefined,
+    servers: [],
+    jobState: {
+      name: undefined,
+      buildId: undefined,
+      tags: undefined
+    },
     seleniumUrl: undefined,
     javaPath: 'java',
     appiumPath: 'appium'
