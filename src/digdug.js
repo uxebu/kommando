@@ -1,7 +1,7 @@
 'use strict';
 
 var lodash = require('lodash');
-var Promise = require('digdug/node_modules/dojo/Promise');
+var promise = require('digdug/node_modules/dojo/Promise');
 
 var merge = lodash.merge;
 
@@ -36,7 +36,7 @@ module.exports = function(tunnelName, DigDugTunnel, options) {
           }, jobState)));
         });
       });
-      Promise.all(sendJobStates).then(function() {
+      promise.all(sendJobStates).then(function() {
         return tunnel.stop();
       }).then(callback, callback);
     }
