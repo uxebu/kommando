@@ -43,9 +43,9 @@
     "nesh": "^1.5.0",
     "optimist": "~0.6.0",
     "saucelabs": "~0.1.0",
-    "selenium-webdriver": "~2.41.0",
+    "selenium-webdriver": "~2.43.1",
     "wd": "~0.2.19",
-    "webdrvr": "~2.41.0-0",
+    "webdrvr": "~2.43.0-0",
     "leadfoot": "^1.0.1",
     "digdug": "^1.0.0",
     "jasminewd": "^1.1.0"
