@@ -15,10 +15,20 @@ var configSeleniumWebdriverJasmine = {
   tests: [
     path.join(__dirname, 'selenium-webdriver', 'jasmine', 'github.js'),
     path.join(__dirname, 'selenium-webdriver', 'jasmine', 'google-search.js')
+  ],
+  runner: 'jasmine'
+};
+
+var configSeleniumWebdriverJasmineNode = {
+  driver: driver,
+  capabilities: capabilities,
+  tests: [
+    path.join(__dirname, 'selenium-webdriver', 'jasmine', 'github.js'),
+    path.join(__dirname, 'selenium-webdriver', 'jasmine', 'google-search.js')
   ]
 };
 
-var configSeleniumWebdriverJasmineWithHelper = {
+var configSeleniumWebdriverJasmineNodeWithHelper = {
   driver: driver,
   capabilities: capabilities,
   tests: [
@@ -125,7 +135,8 @@ var configLeadfootMocha = {
 
 async.series([
   run.bind(null, configSeleniumWebdriverJasmine),
-  run.bind(null, configSeleniumWebdriverJasmineWithHelper),
+  run.bind(null, configSeleniumWebdriverJasmineNode),
+  run.bind(null, configSeleniumWebdriverJasmineNodeWithHelper),
   run.bind(null, configSeleniumWebdriverPlain),
   run.bind(null, configSeleniumWebdriverMochaWithHelper),
   run.bind(null, configSeleniumWebdriverCucumber),
