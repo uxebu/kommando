@@ -20,7 +20,7 @@
     "kommando": "./bin/kommando"
   },
   "scripts": {
-    "test": "node ./test/functional/run-all.js",
+    "test": "npm run lint && node ./test/functional/run-all.js",
     "lint": "jshint src test && jscs src test"
   },
   "author": {

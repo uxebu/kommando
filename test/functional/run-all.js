@@ -93,6 +93,7 @@ var configWdPromiseMocha = {
   client: 'wd-promise'
 };
 
+/*
 var configCabbieMocha = {
   // executing with selenium because cabbie in combination with Ghostdriver
   // currently fails with the initial session-request
@@ -107,6 +108,7 @@ var configCabbieMocha = {
   },
   client: 'cabbie'
 };
+*/
 
 var configLeadfootMocha = {
   capabilities: capabilities,
