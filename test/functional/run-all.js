@@ -30,7 +30,7 @@ var configSeleniumWebdriverJasmineWithHelper = {
   ]
 };
 
-var configPlainJasmine = {
+var configSeleniumWebdriverPlain = {
   driver: driver,
   capabilities: capabilities,
   tests: [
@@ -124,7 +124,7 @@ var configLeadfootMocha = {
 async.series([
   run.bind(null, configSeleniumWebdriverJasmine),
   run.bind(null, configSeleniumWebdriverJasmineWithHelper),
-  run.bind(null, configPlainJasmine),
+  run.bind(null, configSeleniumWebdriverPlain),
   run.bind(null, configSeleniumWebdriverMochaWithHelper),
   run.bind(null, configSeleniumWebdriverCucumber),
   run.bind(null, configWdMocha),
