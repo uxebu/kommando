@@ -56,7 +56,7 @@ kommando --runner repl --browser chrome --client wd
 kommando --runner repl --browser chrome --client wd-promise
 ~~~
 
-## Writing your first functionl test for kommando
+## Writing your first functional test for kommando
 
 ~~~js
 // mytest.js (using jasmine syntax)
